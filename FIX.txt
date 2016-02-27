@@ -1,0 +1,28 @@
+6/17/2015
+--------------------
+	- BUG - input parameters of a constructor not checking for @l tags
+	- IMPROVE - Make the stylesheet better, especially for multi-line stuff (check the style for squareshield documentation
+
+
+5/21/2015
+--------------------
+FIXED	- BUG - Hyperlinks within sections of generated HTML (a function name in the index, 
+		to the specification in the list) doesn't go to the right place, goes to section heading instead.
+FIXED	- BUG - If using env variables and stuff, program can't copy local version of api_style.css, because it 
+		it doesn't go based on the application folder. (there's a way to make it the application path though)
+		(same thing goes for the logs)
+FIXED	- BUG - For variables that don't have type (just one word), it's putting a space before the word. (only the 
+		first one after parenthesis though)
+FIXED	- BUG - A .apiproj file with only 3 lines throws an error??
+FIXED	- BUG - Doesn't check for nonexistant apiproj file
+
+
+
+
+
+
+
+1/24/2015
+---------------------
+FIXED	- BUG - Input variables HAVE to have descriptions or they don't show up
+FIXED	- BUG - If a constructor has a description, it doesn't show the input variables at all

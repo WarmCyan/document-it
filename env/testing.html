@@ -1,0 +1,130 @@
+<html>
+	<head>
+		<title>Testing API</title>
+		<link rel="stylesheet" type="text/css" href="api_style.css">
+	</head>
+	<body>
+		<div id="top_band"></div>
+		<div id="logo_header_area"><h1>@Document It!</h1></div><!--@Document It!-->
+		<div id="content">
+			<h1>Class <span class="keyword">BuildTrainingFacilityTask</span></h1>
+			<p><a href="task.html">Task</a> extension that takes care of creating a training facility in the desired location</p>
+			<hr/>
+			<!--contents-->
+			<p class="tabbedText"><a href="#constructorindex">Constructor Index</a></p>
+			<p class="tabbedText"><a href="#functionindex">Function Index</a></p>	
+			<p class="tabbedText"><a href="#constantlist">Constant List</a></p>	
+			<p class="tabbedText"><a href="#propertylist">Property List</a></p>	
+			<p class="tabbedText"><a href="#constructorlist">Constructor List</a></p>	
+			<p class="tabbedText"><a href="#functionlist">Function List</a></p>	
+			
+			<hr/>
+			<!--INDEX-->
+			<!--constructors index-->
+			<h2>Constructor Index</h2>
+			<p>Click on any of the following constructor names to see more detail about them below.</p>
+			
+			<table class="dataTable">
+				<tr class="row1">
+					<td><code><a href="#constructor1">BuildTrainingFacilityTask</a>(<span class="keyword">String</span> type, <span class="keyword">int</span> timeDif, <span class="keyword">int</span> nationID, <span class="keyword">int</span> sectorID)</code></td>
+				</tr>
+				<tr class="row2">
+					<td><code><a href="#constructor2">BuildTrainingFacilityTask</a>()</code></td>
+				</tr>
+			</table>
+			
+			<!--function index-->
+			<h2>Function Index</h2>
+			<p>Click on any of the following function names to see more detail about them below.</p>
+			<table class="dataTable">
+				<tr><th>Function Name</th><th>Modifier/Return Type</th>
+				</tr>
+				<tr class="row1">
+					<td><code><a href="#runTaskCode">runTaskCode()</code></td>
+					<td class="return_modifier_box"><code><span class="keyword">void</span></code></td>
+				</tr>
+				<tr class="row2">
+					<td><code><a href="#getTaskBySectorID">getTaskBySectorID</a>(<span class="keyword">int</span> id, <span class="keyword">int</span> nationID)</code></td>
+					<td class="return_modifier_box"><code><span class="keyword">static <a href="BuildTrainingFacilityTask.html">BuildTrainingFacilityTask</a></span></code></td>
+				</tr>
+			</table>
+			
+			</br>
+			<hr/>
+			
+			<!--LISTS-->
+			<!--constants list-->
+			<h3>Constant List</h3>
+			<table class="dataTable">
+				<tr class="row1">
+					<td><code class="biggerCode"><span class="keyword">int</span> MY_CONSTANT</code> - <span align="right">A random constant that is always 5</span></td>
+				</tr>
+			</table>
+			
+			</br>
+			<hr/>
+			<!--property list-->
+			<h3>Property List</h3>
+			<table class="dataTable">
+				<tr class="row1">
+					<td><code class="biggerCode"><span class="keyword">int</span> getSectorID()</code> - Description</code></td>
+				</tr>
+				<tr class="row2">
+					<td><code class="biggerCode"><span class="keyword">int</span> getNationID()</code></td>
+				</tr>
+			</table>
+			
+			</br>
+			<hr/>
+			<!--constructor list-->
+			<h3>Constructor List</h3>
+			<table class="dataTable">
+				<tr class="row1">
+					<td>
+						<code class="biggerCode">BuildTrainingFacilityTask(<span class="keyword">String</span> type, <span class="keyword">int</span> timeDif, <span class="keyword">int</span> nationID, <span class="keyword">int</span> sectorID)</code></br></br>
+						<p>A description of this constructor would go here if one existed.</p>
+						<p><b>Input Parameters</b></p>
+						<p class="tabbedText"><code class="mediumCode"><span class="keyword">String</span> type</code><span class="descriptionText"> - Task type</span></p>
+						<p class="tabbedText"><code class="mediumCode"><span class="keyword">int</span> timeDif</code><span class="descriptionText"> - Time until task code executes</span></p>
+						<p class="tabbedText"><code class="mediumCode"><span class="keyword">int</span> nationID</code><span class="descriptionText"> - ID of the nation that owns the facility</span></p>
+						<p class="tabbedText"><code class="mediumCode"><span class="keyword">int</span> sectorID</code><span class="descriptionText"> - ID of the sector where it's being built</span></p>
+					</td>
+				</tr>
+				<tr class="row2">
+					<td>
+						<code class="biggerCode">BuildTrainingFacilityTask()</code>
+					</td>
+				</tr>
+			</table>
+			
+			</br>
+			<hr/>
+			<!--function list-->
+			<a name="functionlist"></a>
+			<h3>Function List</h3>
+			<table class="dataTable">
+				<tr class="row1">
+					<td>
+						<code class="biggerCode"><span class="keyword">void</span> runTaskCode()</code></br></br>
+						<p>Overriden from <a href="task.html">Task</a>, contains the code that will execute after the specified amount of time from the constructor</p>
+					</td>
+				</tr>
+				<tr class="row2">
+					<td>
+						<code class="biggerCode"><span class="keyword">static <a href="BuildTrainingFacilityTask.html">BuildTrainingFacilityTask</a></span> getTaskBySectorID(<span class="keyword">int</span> id, <span class="keyword">int</span> nationID)</code></br></br>
+						<p>Global function that will return the DB instance of itself based on the passed sector ID and nation ID (if it exists)</p>
+						<p><b>Input Parameters</b></p>
+						<p class="tabbedText"><code class="mediumCode"><span class="keyword">int</span> id</code><span class="descriptionText"> - Sector ID</span></p>
+						<p class="tabbedText"><code class="mediumCode"><span class="keyword">int</span> nationID</code><span class="descriptionText"> - ID of the nation that owns the desired training facility</span></p>
+						<p><b>Output</b></p>
+						<p class="tabbedText">The <a href="BuildTrainingFacilityTask.html">BuildTrainingFacilityTask</a> if found in the database based on the passed conditions, otherwise returns null</p>
+				</tr>
+			</table>
+		</div>
+		<div id="bottom_band">
+			<div id="footer_center">
+				<p><i>Generated by Document It engine 1.0.84.0</i></br>Copyright © 2015 Digital Warrior Labs</p>
+			</div>
+		</div>
+	</body>
+</html>
