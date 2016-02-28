@@ -1,11 +1,11 @@
-﻿//********************************************************
-// File: CodeParser.cs
-// Author: Nathan Martindale
-// Date Created: 1/16/2015
-// Date Edited: 5/18/2015
-// Copyright © 2015 Digital Warrior Labs
-// Description: Takes a file, parses it into codeobjects and then returns a codedocument
-//********************************************************
+﻿//*************************************************************
+//  File: CodeParser.cs
+//  Date created: 1/16/2015
+//  Date edited: 2/28/2016
+//  Author: Nathan Martindale
+//  Copyright © 2016 Digital Warrior Labs
+//  Description: Takes a file, parses it into codeobjects and then returns a codedocument
+//*************************************************************
 
 using System;
 using System.Collections.Generic;
@@ -28,7 +28,8 @@ namespace Engine
 		private List<List<string>> m_cSyntaxBlocks = new List<List<string>>();
 
 		//functions
-		public CodeDocument parseFile(string filename)
+		//public CodeDocument parseFile(string filename)
+		public List<CodeDocument> parseFile(string filename)
 		{
 			EngineGovernor.log("Parser initialized.");
 			EngineGovernor.log("File passed for parsing: " + filename);
@@ -44,19 +45,61 @@ namespace Engine
 			EngineGovernor.log("Analyzing syntax blocks...");
 
 			//one of these two (or possibly neither) will be the super container for all the rest of the objects that are returned
-			CodeObject potentialClass = null;
-			CodeObject potentialInterface = null;
+			//CodeObject potentialClass = null;
+			//CodeObject potentialInterface = null;
 			List<CodeObject> currentCodeObjects = new List<CodeObject>(); //after all are collected, this will be set as the children for either the potential class or interface (or the document itself if no class/interface)
 
 			CodeObject rootObject = null; //this will end up being either the potentialClass or the potentialInterface This will be the object added to the CodeDocument
 
-			//compile all the code objects from the syntax blocks
+			List<CodeDocument> documents = new List<CodeDocument>();
+
+			// get all code objects into currentCodeObjects
 			foreach (List<string> syntaxBlock in m_cSyntaxBlocks)
+			{
+				List<CodeObject> blockObjects = analyzeSyntaxBlock(syntaxBlock);
+				foreach (CodeObject obj in blockObjects) { currentCodeObjects.Add(obj); }
+			}
+
+			// Compile classes/interfaces/files based on found codeobjects
+			foreach (CodeObject obj in currentCodeObjects)
+			{
+				if (obj.CodeType == "class" || obj.CodeType == "interface")
+				{
+					// if we already had a root object, make a document out of everything that came before
+					if (rootObject != null)
+					{
+						CodeDocument doc = new CodeDocument();
+						doc.CodeObjects.Add(rootObject);
+						documents.Add(doc);
+					}
+					rootObject = obj;
+					continue;
+				}
+				
+				// if by this point we don't have an actual root, this must be just a file of functions, so make file
+				if (rootObject == null) 
+				{ 
+					rootObject = new CodeObject(filename, "", "", "FILE", new List<CodeObject>()); 
+					continue;
+				}
+				
+				// otherwise go ahead and add to whatever is current
+				rootObject.Children.Add(obj);
+			}
+
+			// at this point, all code objects have been analyzed, so take whatever last root object we had was and turn into documnet
+			CodeDocument document = new CodeDocument();
+			document.CodeObjects.Add(rootObject);
+			documents.Add(document);
+			
+
+			//compile all the code objects from the syntax blocks
+			/*foreach (List<string> syntaxBlock in m_cSyntaxBlocks)
 			{
 				List<CodeObject> blockObjects = analyzeSyntaxBlock(syntaxBlock);
 				foreach (CodeObject obj in blockObjects)
 				{
-					if (obj.CodeType == "class")
+					if (obj.CodeType == "class") // NOTE: This actually means we've finished LAST class, so reassign current root object?
 					{
 						EngineGovernor.log("DEBUG - SUPER - We have a class object!", 1);
 						if (potentialClass != null) //we already had a class...
@@ -95,20 +138,21 @@ namespace Engine
 				EngineGovernor.log("DEBUG - Setting class as root code object", 1);
 				potentialClass.Children = currentCodeObjects;
 				rootObject = potentialClass;
-			}
+			}*/
 
-			List<CodeObject> testList = new List<CodeObject>();
-			testList.Add(rootObject);
-			unitTestDumpCodeObjects(testList);
+			//List<CodeObject> testList = new List<CodeObject>();
+			//testList.Add(rootObject);
+			//unitTestDumpCodeObjects(testList);
 
 			EngineGovernor.log("Analysis complete.");
 
-			EngineGovernor.log("DEBUG - SUPER - Storing everything in a codeDocument and returning it to the engine", 1);
-			CodeDocument doc = new CodeDocument();
-			doc.CodeObjects.Add(rootObject);
+			//EngineGovernor.log("DEBUG - SUPER - Storing everything in a codeDocument and returning it to the engine", 1);
+			//CodeDocument doc = new CodeDocument();
+			//doc.CodeObjects.Add(rootObject);
 
 			EngineGovernor.log("Parser has completed job successfully! Returning the completed CodeDocument analysis to the engine governor...");
-			return doc; 
+			//return doc; 
+			return documents; 
 		}
 
 		//try to assign the file stream based on name, and then read all lines into the List m_cFileLines
@@ -161,28 +205,28 @@ namespace Engine
 					commentFound = true;
 					commentBeginningLineIndex = currentLineIndex;
 					currentLineIndex++; //so that it doesn't review the first line twice
-					EngineGovernor.log("DEBUG - SUPER - Found comment starting on line " + commentBeginningLineIndex, 1);
+					//EngineGovernor.log("DEBUG - SUPER - Found comment starting on line " + commentBeginningLineIndex, 1);
 					while (isCommentLine(false, currentLineIndex) == 1) { currentLineIndex++; }
 					currentLineIndex--; //based on the logic, it will always extend one past the end of the comment
 					commentEndingLineIndex = currentLineIndex;
-					EngineGovernor.log("DEBUG - SUPER - That comment ends on line " + commentEndingLineIndex, 1);
+					//EngineGovernor.log("DEBUG - SUPER - That comment ends on line " + commentEndingLineIndex, 1);
 				}
 				else if (lineResult == 2) //found the start of a block comment
 				{
 					commentFound = true;
 					commentBeginningLineIndex = currentLineIndex;
 					currentLineIndex++;
-					EngineGovernor.log("DEBUG - SUPER - Found block comment starting on line " + commentBeginningLineIndex, 1);
+					//EngineGovernor.log("DEBUG - SUPER - Found block comment starting on line " + commentBeginningLineIndex, 1);
 					while (isCommentLine(true, currentLineIndex) == 3) { currentLineIndex++; }
 					commentEndingLineIndex = currentLineIndex;
-					EngineGovernor.log("DEBUG - SUPER - That block comment ends on line " + commentEndingLineIndex, 1);
+					//EngineGovernor.log("DEBUG - SUPER - That block comment ends on line " + commentEndingLineIndex, 1);
 				}
 				else if (lineResult == 5) //found a single line block comment
 				{
 					commentFound = true;
 					commentBeginningLineIndex = currentLineIndex;
 					commentEndingLineIndex = currentLineIndex;
-					EngineGovernor.log("DEBUG - SUPER - Found single line block comment on line " + currentLineIndex, 1);
+					//EngineGovernor.log("DEBUG - SUPER - Found single line block comment on line " + currentLineIndex, 1);
 				}
 
 				//save the comment lines
@@ -195,11 +239,11 @@ namespace Engine
 					{
 						commentedLines.Add(m_cFileLines[i]);
 						commentLineIndex.Add(i);
-						EngineGovernor.log("DEBUG - Added line " + i + " to comment block " + commentBlockIndex, 1);
+						//EngineGovernor.log("DEBUG - Added line " + i + " to comment block " + commentBlockIndex, 1);
 					}
 					m_cCommentBlocks.Add(commentedLines);
 					m_cCommentBlocksLineIndex.Add(commentLineIndex);
-					EngineGovernor.log("DEBUG - Comment block " + commentBlockIndex + " was added to the list of comment blocks", 1);
+					//EngineGovernor.log("DEBUG - Comment block " + commentBlockIndex + " was added to the list of comment blocks", 1);
 					commentFound = false;
 					commentBlockIndex++;
 				}
@@ -222,67 +266,67 @@ namespace Engine
 			//if not in a block comment, check for obvious '//'
 			if (!blockComment)
 			{
-				EngineGovernor.log("DEBUG - Analyzing line " + requestedLineIndex + " in NONBLOCK comment mode", 1);
+				//EngineGovernor.log("DEBUG - Analyzing line " + requestedLineIndex + " in NONBLOCK comment mode", 1);
 				bool foundNormal = false;
 				bool foundBlock = false;
 
-				if (line.Contains("//")) { foundNormal = true; EngineGovernor.log("DEBUG - : Found normal comment delimiter", 1); }
-				if (line.Contains("/*")) { foundBlock = true; EngineGovernor.log("DEBUG - : Found block comment delimiter", 1); }
+				if (line.Contains("//")) { foundNormal = true; /*EngineGovernor.log("DEBUG - : Found normal comment delimiter", 1);*/ }
+				if (line.Contains("/*")) { foundBlock = true; /*EngineGovernor.log("DEBUG - : Found block comment delimiter", 1);*/ }
 
 				//resolve potential conflicts (if perhaps there's a '//' in the comment after a '/*')
 				if (foundNormal && foundBlock)
 				{
-					EngineGovernor.log("DEBUG - : Found multiple comment types, resolving conflict...", 1);
+					//EngineGovernor.log("DEBUG - : Found multiple comment types, resolving conflict...", 1);
 
 					int normalIndex = line.IndexOf("//");
 					int blockIndex = line.IndexOf("/*");
 
-					EngineGovernor.log("DEBUG - : : Normal delimiter index = " + normalIndex, 1);
-					EngineGovernor.log("DEBUG - : : Block delimiter index = " + blockIndex, 1);
-					if (normalIndex < blockIndex) { foundBlock = false; EngineGovernor.log("DEBUG - : : Normal delimiter found sooner, ignoring block delimiter", 1); }
-					else { foundNormal = false; EngineGovernor.log("DEBUG - : : Block delimiter found sooner, ignoring normal delimiter", 1); }
+					//EngineGovernor.log("DEBUG - : : Normal delimiter index = " + normalIndex, 1);
+					//EngineGovernor.log("DEBUG - : : Block delimiter index = " + blockIndex, 1);
+					if (normalIndex < blockIndex) { foundBlock = false; /*EngineGovernor.log("DEBUG - : : Normal delimiter found sooner, ignoring block delimiter", 1);*/ }
+					else { foundNormal = false; /*EngineGovernor.log("DEBUG - : : Block delimiter found sooner, ignoring normal delimiter", 1);*/ }
 				}
 
 				if (foundNormal) 
 				{ 
-					EngineGovernor.log("DEBUG - : returning 1, for normal comment delimiter", 1); 
+					//EngineGovernor.log("DEBUG - : returning 1, for normal comment delimiter", 1); 
 					m_cFileLinesTypes[requestedLineIndex] = 1;
 					return 1; 
 				}
 				//if found start of block, need to check and make sure the end isn't on the same line
 				else if (foundBlock) 
 				{
-					EngineGovernor.log("DEBUG - : Checking to make sure end block comment delimiter isn't on the same line...", 1);
+					//EngineGovernor.log("DEBUG - : Checking to make sure end block comment delimiter isn't on the same line...", 1);
 					if (line.IndexOf("*/") > line.IndexOf("/*")) 
 					{ 
-						EngineGovernor.log("DEBUG - : : Found the end block comment delimiter, returning 5 for single line block comment.", 1);
+						//EngineGovernor.log("DEBUG - : : Found the end block comment delimiter, returning 5 for single line block comment.", 1);
 						m_cFileLinesTypes[requestedLineIndex] = 5;
 						return 5; 
 					}
-					else { EngineGovernor.log("DEBUG - : : No end block comment delimiter found, continuing normally.", 1); }
-					EngineGovernor.log("DEBUG - : Returning 2, for block comment delimiter", 1);
+					//else { EngineGovernor.log("DEBUG - : : No end block comment delimiter found, continuing normally.", 1); }
+					//EngineGovernor.log("DEBUG - : Returning 2, for block comment delimiter", 1);
 					m_cFileLinesTypes[requestedLineIndex] = 2;
 					return 2; 
 				}
 				else 
 				{ 
-					EngineGovernor.log("DEBUG - : Returning 0, no comment delimiter found", 1);
+					//EngineGovernor.log("DEBUG - : Returning 0, no comment delimiter found", 1);
 					m_cFileLinesTypes[requestedLineIndex] = 0;
 					return 0; 
 				}
 			}
 			else //block comment mode
 			{
-				EngineGovernor.log("DEBUG - Analyzing line " + requestedLineIndex + " in BLOCK comment mode", 1);
+				//EngineGovernor.log("DEBUG - Analyzing line " + requestedLineIndex + " in BLOCK comment mode", 1);
 				if (line.Contains("*/"))
 				{
-					EngineGovernor.log("DEBUG - : Returning 4, the end block comment delimiter was found", 1);
+					//EngineGovernor.log("DEBUG - : Returning 4, the end block comment delimiter was found", 1);
 					m_cFileLinesTypes[requestedLineIndex] = 4;
 					return 4;
 				}
 				else 
 				{ 
-					EngineGovernor.log("DEBUG - : Returning 3, currently inside of a block comment", 1);
+					//EngineGovernor.log("DEBUG - : Returning 3, currently inside of a block comment", 1);
 					m_cFileLinesTypes[requestedLineIndex] = 3;
 					return 3; 
 				}
@@ -292,30 +336,30 @@ namespace Engine
 		//returns only the text within a comment, based on the type (see documentation of the function isCommentLine())
 		private string getCommentedPart(string line, int commentType)
 		{
-			EngineGovernor.log("DEBUG - Getting comment content of '" + line + "' Reportedly comment type " + commentType, 1);
+			//EngineGovernor.log("DEBUG - Getting comment content of '" + line + "' Reportedly comment type " + commentType, 1);
 			if (commentType == 3) //inside block comment
 			{ 
-				EngineGovernor.log("DEBUG - : 3, we're inside of a block comment, return all of it: '" + line + "'", 1); 
+				//EngineGovernor.log("DEBUG - : 3, we're inside of a block comment, return all of it: '" + line + "'", 1); 
 				return line; 
 			}
 			else if (commentType == 1) //line with a '//'
 			{
-				if (line.IndexOf("//") + 2 > line.Length) { EngineGovernor.log("DEBUG - : 1, but the comment is blank after the delimiter, returning ''", 1); return ""; }
+				if (line.IndexOf("//") + 2 > line.Length) { /*EngineGovernor.log("DEBUG - : 1, but the comment is blank after the delimiter, returning ''", 1);*/ return ""; }
 				string afterDelimit = line.Substring(line.IndexOf("//") + 2);
-				EngineGovernor.log("DEBUG - : 1, returning everything after the delimiter, '" + afterDelimit + "'", 1);
+				//EngineGovernor.log("DEBUG - : 1, returning everything after the delimiter, '" + afterDelimit + "'", 1);
 				return afterDelimit;
 			}
 			else if (commentType == 2) //line with a '/*' (assumed to be multi-line, exception would have a comment type of 5)
 			{
-				if (line.IndexOf("/*") + 2 > line.Length) { EngineGovernor.log("DEBUG - : 2, but the comment is blank after delimiter, returning ''", 1); return ""; }
+				if (line.IndexOf("/*") + 2 > line.Length) { /*EngineGovernor.log("DEBUG - : 2, but the comment is blank after delimiter, returning ''", 1);*/ return ""; }
 				string afterDelimit = line.Substring(line.IndexOf("/*") + 2);
-				EngineGovernor.log("DEBUG - : 2, returning everything after the block delimiter, '" + afterDelimit + "'", 1);
+				//EngineGovernor.log("DEBUG - : 2, returning everything after the block delimiter, '" + afterDelimit + "'", 1);
 				return afterDelimit;
 			}
 			else if (commentType == 4) //end of a block comment
 			{
 				string before = line.Substring(0, line.IndexOf("*/"));
-				EngineGovernor.log("DEBUG - : 4, returning everything before the end block delimiter, '" + before + "'", 1);
+				//EngineGovernor.log("DEBUG - : 4, returning everything before the end block delimiter, '" + before + "'", 1);
 				return before;
 			}
 			else if (commentType == 5) //single line block comment
@@ -325,7 +369,7 @@ namespace Engine
 				int endIndex = line.IndexOf("*/");
 				int length = endIndex - startIndex;
 				string between = line.Substring(startIndex, length);
-				EngineGovernor.log("DEBUG - : 5, returning everything inside of the single line comment block, '" + between + "'", 1);
+				//EngineGovernor.log("DEBUG - : 5, returning everything inside of the single line comment block, '" + between + "'", 1);
 				return between;
 			}
 			EngineGovernor.log("WARNING - A comment type was registered incorrectly. Program could potentially crash or have incorrect results.", -1);
@@ -343,9 +387,9 @@ namespace Engine
 			{
 				for (int j = 0; j < m_cCommentBlocks[i].Count; j++)
 				{
-					EngineGovernor.log("DEBUG - SUPER - preparing to check '" + m_cCommentBlocks[i][j] + "' (line " + m_cCommentBlocksLineIndex[i][j] + ")", 1);
+					//EngineGovernor.log("DEBUG - SUPER - preparing to check '" + m_cCommentBlocks[i][j] + "' (line " + m_cCommentBlocksLineIndex[i][j] + ")", 1);
 					string innerComment = getCommentedPart(m_cCommentBlocks[i][j], m_cFileLinesTypes[m_cCommentBlocksLineIndex[i][j]]);
-					EngineGovernor.log("DEBUG - Obtained: " + innerComment, 1);
+					//EngineGovernor.log("DEBUG - Obtained: " + innerComment, 1);
 					innerComments.Add(innerComment);
 				}
 			}
@@ -358,30 +402,30 @@ namespace Engine
 			int currentLine = 0;
 			while (currentLine < innerComments.Count)
 			{
-				EngineGovernor.log("DEBUG - Evaluating innerCommentLine " + currentLine, 1);
+				//EngineGovernor.log("DEBUG - Evaluating innerCommentLine " + currentLine, 1);
 				 
 				if (innerComments[currentLine].Contains("{"))
 				{
-					EngineGovernor.log("DEBUG - : Found a starting brace!", 1);
+					//EngineGovernor.log("DEBUG - : Found a starting brace!", 1);
 					List<string> syntaxBlock = new List<string>();
 
 					//assuming all on one line
 					if (innerComments[currentLine].IndexOf("}") > innerComments[currentLine].IndexOf("{"))
 					{
-						EngineGovernor.log("DEBUG - : Found an ending brace on the same line, this is a single line syntax block", 1);
+						//EngineGovernor.log("DEBUG - : Found an ending brace on the same line, this is a single line syntax block", 1);
 						int start = innerComments[currentLine].IndexOf("{") + 1;
 						int end = innerComments[currentLine].IndexOf("}");
 						int length = end - start;
 
 						string block = innerComments[currentLine].Substring(start, length);
-						EngineGovernor.log("DEBUG - : Adding all content between braces, '" + block + "'", 1);
+						//EngineGovernor.log("DEBUG - : Adding all content between braces, '" + block + "'", 1);
 						syntaxBlock.Add(block);
 					}
 					else //not all on one line
 					{
 						//add the first part of the line after the starting brace 
 						string first = innerComments[currentLine].Substring(innerComments[currentLine].IndexOf("{") + 1);
-						EngineGovernor.log("DEBUG - : Adding content after the starting brace, '" + first + "'", 1);
+						//EngineGovernor.log("DEBUG - : Adding content after the starting brace, '" + first + "'", 1);
 						syntaxBlock.Add(first);
 						currentLine++;
 
@@ -390,7 +434,7 @@ namespace Engine
 						//get all body lines
 						while (innerComments[currentLine].IndexOf("}") == -1)
 						{
-							EngineGovernor.log("DEBUG - : No ending brace found on this line, add whole line, '" + innerComments[currentLine] + "'", 1);
+							//EngineGovernor.log("DEBUG - : No ending brace found on this line, add whole line, '" + innerComments[currentLine] + "'", 1);
 							syntaxBlock.Add(innerComments[currentLine]);
 							currentLine++;
 							if (currentLine >= innerComments.Count) { EngineGovernor.log("WARNING - Did not find a closing brace for the syntax block. Check for missing closing braces in your comments.", -1); flag_reachedEnd = true; break; }
@@ -398,10 +442,10 @@ namespace Engine
 						//get final line (at this point, the last while loop will have stopped at exactly the line that contains the ending brace)
 						if (!flag_reachedEnd)
 						{
-							EngineGovernor.log("DEBUG - : Reached line with ending brace", 1);
+							//EngineGovernor.log("DEBUG - : Reached line with ending brace", 1);
 							int end = innerComments[currentLine].IndexOf("}");
 							string before = innerComments[currentLine].Substring(0, end);
-							EngineGovernor.log("DEBUG - : Adding text before the brace, '" + before + "'", 1);
+							//EngineGovernor.log("DEBUG - : Adding text before the brace, '" + before + "'", 1);
 							syntaxBlock.Add(before);
 						}
 					}
@@ -422,11 +466,11 @@ namespace Engine
 			//remove all excess space from each line in linesBlock
 			for (int i = 0; i < linesBlock.Count; i++)
 			{
-				EngineGovernor.log("DEBUG - : trimming space from '" + linesBlock[i] + "'", 1);
+				//EngineGovernor.log("DEBUG - : trimming space from '" + linesBlock[i] + "'", 1);
 				linesBlock[i] = linesBlock[i].Trim();
-				EngineGovernor.log("DEBUG - : : line now reads: '" + linesBlock[i] + "'", 1);
+				//EngineGovernor.log("DEBUG - : : line now reads: '" + linesBlock[i] + "'", 1);
 				syntax += linesBlock[i];
-				EngineGovernor.log("DEBUG - : line added to syntax, syntax is now '" + syntax + "'", 1);
+				//EngineGovernor.log("DEBUG - : line added to syntax, syntax is now '" + syntax + "'", 1);
 			}
 
 			List<string> tags = findTags(syntax);
@@ -448,90 +492,90 @@ namespace Engine
 			{	
 				string tagSpecification = tags[i];
 				string tagDefinition = tags[i + 1];
-				EngineGovernor.log("DEBUG - Parsing tag '" + tagSpecification + "' : '" + tagDefinition + "'", 1);
+				//EngineGovernor.log("DEBUG - Parsing tag '" + tagSpecification + "' : '" + tagDefinition + "'", 1);
 
 				//check tag specification
 				if (tagSpecification == "cl" || tagSpecification == "class")
 				{
-					EngineGovernor.log("DEBUG - : Found a class!", 1);
+					//EngineGovernor.log("DEBUG - : Found a class!", 1);
 					string className = tagDefinition;
 					CodeObject codeClass = new CodeObject();
 					codeClass.Name = className;
 					codeClass.CodeType = "class";
 					waitingClass = codeClass;
-					EngineGovernor.log("DEBUG - WAITING CLASS ASSIGNED: " + className, 1);
+					//EngineGovernor.log("DEBUG - WAITING CLASS ASSIGNED: " + className, 1);
 				}
 				else if (tagSpecification == "intf" || tagSpecification == "interface")
 				{
-					EngineGovernor.log("DEBUG - : Found an interface!", 1);
+					//EngineGovernor.log("DEBUG - : Found an interface!", 1);
 					string interfaceName = tagDefinition;
 					CodeObject codeInterface = new CodeObject();
 					codeInterface.Name = interfaceName;
 					codeInterface.CodeType = "interface";
 					waitingInterface = codeInterface;
-					EngineGovernor.log("DEBUG - WAITING INTERFACE ASSIGNED: " + interfaceName, 1);
+					//EngineGovernor.log("DEBUG - WAITING INTERFACE ASSIGNED: " + interfaceName, 1);
 				}
 				else if (tagSpecification == "cnst" || tagSpecification == "constant")
 				{
-					EngineGovernor.log("DEBUG - : Found a constant!", 1);
+					//EngineGovernor.log("DEBUG - : Found a constant!", 1);
 
 					string[] words = tagDefinition.Split(' ');
 					string constantName = words[words.Length - 1]; //name of the constant should be the last word
-					EngineGovernor.log("DEBUG - : : the name of this constant should be '" + constantName + "'", 1);
+					//EngineGovernor.log("DEBUG - : : the name of this constant should be '" + constantName + "'", 1);
 					string constantType = "";
 					for (int j = 0; j < words.Length - 1; j++) //everything except the last word (name) should be the type/modifier
 					{
 						constantType += words[j] + " ";
 					}
 					constantType = constantType.Trim(); //take out the space that will be at the end (from for loop)
-					EngineGovernor.log("DEBUG - : : the type/modifier of this constant should be '" + constantType + "'", 1);
+					//EngineGovernor.log("DEBUG - : : the type/modifier of this constant should be '" + constantType + "'", 1);
 
 					CodeObject codeConstant = new CodeObject();
 					codeConstant.Name = constantName;
 					codeConstant.Type = constantType;
 					codeConstant.CodeType = "constant";
 					waitingConstant = codeConstant;
-					EngineGovernor.log("DEBUG - WAITING CONSTANT ASSIGNED: " + constantName, 1);
+					//EngineGovernor.log("DEBUG - WAITING CONSTANT ASSIGNED: " + constantName, 1);
 				}
 				else if (tagSpecification == "c" || tagSpecification == "constructor")
 				{
-					EngineGovernor.log("DEBUG - : Found a constructor!", 1);
+					//EngineGovernor.log("DEBUG - : Found a constructor!", 1);
 					string constructorName = tagDefinition;
 					CodeObject codeConstructor = new CodeObject();
 					codeConstructor.Name = constructorName;
 					codeConstructor.CodeType = "constructor";
 					waitingConstructor = codeConstructor;
-					EngineGovernor.log("DEBUG - WAITING CONSTRUCTOR ASSIGNED: " + constructorName, 1);
+					//EngineGovernor.log("DEBUG - WAITING CONSTRUCTOR ASSIGNED: " + constructorName, 1);
 				}
 				else if (tagSpecification == "p" || tagSpecification == "property")
 				{
-					EngineGovernor.log("DEBUG - : Found a property!", 1);
+					//EngineGovernor.log("DEBUG - : Found a property!", 1);
 
 					string[] words = tagDefinition.Split(' ');
 					string propertyName = words[words.Length - 1]; //name of the property should be the last word
-					EngineGovernor.log("DEBUG - : : the name of this property should be '" + propertyName + "'", 1);
+					//EngineGovernor.log("DEBUG - : : the name of this property should be '" + propertyName + "'", 1);
 					string propertyType = "";
 					for (int j = 0; j < words.Length - 1; j++) //everything except the last word (name) should be the type/modifier
 					{
 						propertyType += words[j] + " ";
 					}
 					propertyType = propertyType.Trim(); //take out the space that will be at the end (from for loop)
-					EngineGovernor.log("DEBUG - : : the type/modifier of this property should be '" + propertyType + "'", 1);
+					//EngineGovernor.log("DEBUG - : : the type/modifier of this property should be '" + propertyType + "'", 1);
 
 					CodeObject codeProperty = new CodeObject();
 					codeProperty.Name = propertyName;
 					codeProperty.Type = propertyType;
 					codeProperty.CodeType = "property";
 					waitingProperty = codeProperty;
-					EngineGovernor.log("DEBUG - WAITING PROPERTY ASSIGNED: " + propertyName, 1);
+					//EngineGovernor.log("DEBUG - WAITING PROPERTY ASSIGNED: " + propertyName, 1);
 				}
 				else if (tagSpecification == "f" || tagSpecification == "function")
 				{
-					EngineGovernor.log("DEBUG - : Found a function!", 1);
+					//EngineGovernor.log("DEBUG - : Found a function!", 1);
 
 					string[] words = tagDefinition.Split(' ');
 					string functionName = words[words.Length - 1];
-					EngineGovernor.log("DEBUG - : : the name of this function should be '" + functionName + "'", 1);
+					//EngineGovernor.log("DEBUG - : : the name of this function should be '" + functionName + "'", 1);
 
 					string functionType = "";
 					for (int j = 0; j < words.Length - 1; j++) //everything except the last word (name) should be the type/modifier
@@ -539,31 +583,31 @@ namespace Engine
 						functionType += words[j] + " ";
 					}
 					functionType = functionType.Trim(); //take out the space that will be at the end (from for loop)
-					EngineGovernor.log("DEBUG - : : the type/modifier of this property should be '" + functionType + "'", 1);
+					//EngineGovernor.log("DEBUG - : : the type/modifier of this property should be '" + functionType + "'", 1);
 
 					CodeObject codeFunction = new CodeObject();
 					codeFunction.Name = functionName;
 					codeFunction.Type = functionType;
 					codeFunction.CodeType = "function";
 					waitingFunction = codeFunction;
-					EngineGovernor.log("DEBUG - WAITING FUNCTION ASSIGNED: " + functionName, 1);
+					//EngineGovernor.log("DEBUG - WAITING FUNCTION ASSIGNED: " + functionName, 1);
 				}
 				else if (tagSpecification == "i" || tagSpecification == "input")
 				{
-					EngineGovernor.log("DEBUG - : Found an input start!", 1);
+					//EngineGovernor.log("DEBUG - : Found an input start!", 1);
 
 					CodeObject codeInput = new CodeObject();
 					codeInput.CodeType = "input";
 					waitingInput = codeInput;
-					EngineGovernor.log("DEBUG - : : WAITING INPUT ASSIGNED", 1);
+					//EngineGovernor.log("DEBUG - : : WAITING INPUT ASSIGNED", 1);
 				}
 				else if (tagSpecification == "v" || tagSpecification == "variable")
 				{
-					EngineGovernor.log("DEBUG - : Found a variable!", 1);
+					//EngineGovernor.log("DEBUG - : Found a variable!", 1);
 
 					string[] words = tagDefinition.Split(' ');
 					string variableName = words[words.Length - 1];
-					EngineGovernor.log("DEBUG - : : the name of the variable should be '" + variableName + "'", 1);
+					//EngineGovernor.log("DEBUG - : : the name of the variable should be '" + variableName + "'", 1);
 
 					string variableType = "";
 					for (int j = 0; j < words.Length - 1; j++)
@@ -571,7 +615,7 @@ namespace Engine
 						variableType += words[j] + " ";
 					}
 					variableType = variableType.Trim();
-					EngineGovernor.log("DEBUG - : : the type/modifier of this property should be '" + variableType + "'", 1);
+					//EngineGovernor.log("DEBUG - : : the type/modifier of this property should be '" + variableType + "'", 1);
 
 					CodeObject codeVariable = new CodeObject();
 					codeVariable.Name = variableName;
@@ -586,65 +630,65 @@ namespace Engine
 						CodeObject finishedVariable = waitingVariable;
 						if (waitingInput != null)
 						{
-							EngineGovernor.log("DEBUG - : : : Found waiting input to add the previous waiting variable to.", 1);
+							//EngineGovernor.log("DEBUG - : : : Found waiting input to add the previous waiting variable to.", 1);
 							waitingInput.Children.Add(finishedVariable);
 						}
 						else //free variable
 						{
-							EngineGovernor.log("DEBUG - : : : No waiting input found for previous waiting variable. Adding as free variable.", 1);
+							//EngineGovernor.log("DEBUG - : : : No waiting input found for previous waiting variable. Adding as free variable.", 1);
 							foundObjects.Add(finishedVariable);
 						}
 					}
 					
 					waitingVariable = codeVariable;
-					EngineGovernor.log("DEBUG - : : WAITING VARIABLE ASSIGNED: " + variableName, 1);
+					//EngineGovernor.log("DEBUG - : : WAITING VARIABLE ASSIGNED: " + variableName, 1);
 				}
 				else if (tagSpecification == "d" || tagSpecification == "description")
 				{
-					EngineGovernor.log("DEBUG - : Found a description", 1);
+					//EngineGovernor.log("DEBUG - : Found a description", 1);
 
 					string descriptionContent = tagDefinition;
-					EngineGovernor.log("DEBUG - : : Description content is '" + descriptionContent + "'", 1);
+					//EngineGovernor.log("DEBUG - : : Description content is '" + descriptionContent + "'", 1);
 
 					//check the list of waiting variables in reverse initialized order from above
 					if (waitingVariable != null)
 					{
 						waitingVariable.Description = descriptionContent;
-						EngineGovernor.log("DEBUG - : : A waiting variable was the first in the chain. Adding description to the variable", 1);
+						//EngineGovernor.log("DEBUG - : : A waiting variable was the first in the chain. Adding description to the variable", 1);
 
 						//at this point, we know that the variable is finished, description should be the last part of it
 						CodeObject finishedVariable = waitingVariable;
 						if (waitingInput != null) //check if it belongs to an input
 						{
-							EngineGovernor.log("DEBUG - : : : Found a waiting input, variable being assigned to it.", 1);
+							//EngineGovernor.log("DEBUG - : : : Found a waiting input, variable being assigned to it.", 1);
 							waitingInput.Children.Add(finishedVariable);
 						}
 						else
 						{
-							EngineGovernor.log("DEBUG - : : : No waiting input was found, saving as a free variable.", 1);
+							//EngineGovernor.log("DEBUG - : : : No waiting input was found, saving as a free variable.", 1);
 							foundObjects.Add(finishedVariable);
 						}
-						EngineGovernor.log("DEBUG - : : Variable finished, nullifying waitingVariable.", 1);
+						//EngineGovernor.log("DEBUG - : : Variable finished, nullifying waitingVariable.", 1);
 						waitingVariable = null;
 					}
 					else if (waitingFunction != null)
 					{
 						waitingFunction.Description = descriptionContent;
-						EngineGovernor.log("DEBUG - : : A waiting function was the next in the chain. Adding description to the function", 1);
+						//EngineGovernor.log("DEBUG - : : A waiting function was the next in the chain. Adding description to the function", 1);
 					}
 					else if (waitingProperty != null)
 					{
 						waitingProperty.Description = descriptionContent;
-						EngineGovernor.log("DEBUG - : : A waiting property was the next in the chain. Adding description to the property", 1);
+						//EngineGovernor.log("DEBUG - : : A waiting property was the next in the chain. Adding description to the property", 1);
 						CodeObject finishedProperty = waitingProperty;
 						foundObjects.Add(finishedProperty);
-						EngineGovernor.log("DEBUG - : : Property finished, nullifying waitingProperty.", 1);
+						//EngineGovernor.log("DEBUG - : : Property finished, nullifying waitingProperty.", 1);
 						waitingProperty = null;
 					}
 					else if (waitingConstructor != null)
 					{
 						waitingConstructor.Description = descriptionContent;
-						EngineGovernor.log("DEBUG - : : A waiting constructor was the next in the chain. Adding description to the constructor", 1);
+						//EngineGovernor.log("DEBUG - : : A waiting constructor was the next in the chain. Adding description to the constructor", 1);
 
 						//taken out because then if there's an input, it doesn't get added to the constructor
 						/*CodeObject finishedConstructor = waitingConstructor;
@@ -655,28 +699,28 @@ namespace Engine
 					else if (waitingConstant != null)
 					{
 						waitingConstant.Description = descriptionContent;
-						EngineGovernor.log("DEBUG - : : A waiting constant was the next in the chain. Adding description to the constant", 1);
+						//EngineGovernor.log("DEBUG - : : A waiting constant was the next in the chain. Adding description to the constant", 1);
 						CodeObject finishedConstant = waitingConstant;
 						foundObjects.Add(finishedConstant);
-						EngineGovernor.log("DEBUG - : : Constant finished, nullifying waitingConstant.", 1);
+						//EngineGovernor.log("DEBUG - : : Constant finished, nullifying waitingConstant.", 1);
 						waitingConstant = null;
 					}
 					else if (waitingInterface != null)
 					{
 						waitingInterface.Description = descriptionContent;
-						EngineGovernor.log("DEBUG - : : A waiting interface was the next in the chain. Adding description to the interface", 1);
+						//EngineGovernor.log("DEBUG - : : A waiting interface was the next in the chain. Adding description to the interface", 1);
 						CodeObject finishedInterface = waitingInterface;
 						foundObjects.Add(finishedInterface);
-						EngineGovernor.log("DEBUG - : : Interface finished, nullifying waitingInterface.", 1);
+						//EngineGovernor.log("DEBUG - : : Interface finished, nullifying waitingInterface.", 1);
 						waitingInterface = null;
 					}
 					else if (waitingClass != null)
 					{
 						waitingClass.Description = descriptionContent;
-						EngineGovernor.log("DEBUG - : : A waiting class was the next in the chain. Adding description to the class", 1);
+						//EngineGovernor.log("DEBUG - : : A waiting class was the next in the chain. Adding description to the class", 1);
 						CodeObject finishedClass = waitingClass;
 						foundObjects.Add(finishedClass);
-						EngineGovernor.log("DEBUG - : : Class finished, nullifying waitingClass.", 1);
+						//EngineGovernor.log("DEBUG - : : Class finished, nullifying waitingClass.", 1);
 						waitingClass = null;
 					}
 					else
@@ -687,7 +731,7 @@ namespace Engine
 				}
 				else if (tagSpecification == "o" || tagSpecification == "output")
 				{
-					EngineGovernor.log("DEBUG - : Found an output tag", 1);
+					//EngineGovernor.log("DEBUG - : Found an output tag", 1);
 
 					string outputDefinition = tagDefinition;
 					CodeObject codeOutput = new CodeObject();
@@ -708,36 +752,36 @@ namespace Engine
 						CodeObject codeInput = null;
 						if (waitingInput != null)
 						{
-							EngineGovernor.log("DEBUG - : : Since we've reached an output, the input is now complete.", 1);
+							//EngineGovernor.log("DEBUG - : : Since we've reached an output, the input is now complete.", 1);
 							codeInput = waitingInput;
-							EngineGovernor.log("DEBUG - : : Input finished, nullifying waitingInput.", 1);
+							//EngineGovernor.log("DEBUG - : : Input finished, nullifying waitingInput.", 1);
 							waitingInput = null;
 						}
 						//now end the function
 						if (codeInput != null) //if there was an input, go ahead and add it to the function
 						{ 
 							waitingFunction.Children.Add(codeInput);
-							EngineGovernor.log("DEBUG - : : Added input to waitingFunction.", 1);
+							//EngineGovernor.log("DEBUG - : : Added input to waitingFunction.", 1);
 						} 
 
 						CodeObject finishedFunction = waitingFunction;
 						finishedFunction.Children.Add(codeOutput);
-						EngineGovernor.log("DEBUG - : : Added output to finishedFunction.", 1);
+						//EngineGovernor.log("DEBUG - : : Added output to finishedFunction.", 1);
 						foundObjects.Add(finishedFunction);
-						EngineGovernor.log("DEBUG - : : Function finished, nullifying waitingFunction.", 1);
+						//EngineGovernor.log("DEBUG - : : Function finished, nullifying waitingFunction.", 1);
 						waitingFunction = null;
 					}
 				}
 			}
 
-			EngineGovernor.log("DEBUG - : Cleaning up and finishing all waiting objects...", 1);
+			//EngineGovernor.log("DEBUG - : Cleaning up and finishing all waiting objects...", 1);
 			//now take care of any waiting objects that haven't been finished yet
 			if (waitingClass != null)
 			{
 				EngineGovernor.log("WARNING - Found class with no description.", -1);
 				CodeObject finishedClass = waitingClass;
 				foundObjects.Add(finishedClass);
-				EngineGovernor.log("DEBUG - : : Adding and nullifying waitingClass anyway.", 1);
+				//EngineGovernor.log("DEBUG - : : Adding and nullifying waitingClass anyway.", 1);
 				waitingClass = null;
 			}
 			if (waitingInterface != null)
@@ -745,7 +789,7 @@ namespace Engine
 				EngineGovernor.log("WARNING - Found interface with no description.", -1);
 				CodeObject finishedInterface = waitingInterface;
 				foundObjects.Add(finishedInterface);
-				EngineGovernor.log("DEBUG - : : Adding and nullifying waitingInterface anyway.", 1);
+				//EngineGovernor.log("DEBUG - : : Adding and nullifying waitingInterface anyway.", 1);
 				waitingInterface = null;
 			}
 			if (waitingVariable != null)
@@ -762,53 +806,53 @@ namespace Engine
 					foundObjects.Add(finishedVariable);
 				}
 				waitingVariable = null;
-				EngineGovernor.log("DEBUG - : : Nullifying waitingVariable.", 1);
+				//EngineGovernor.log("DEBUG - : : Nullifying waitingVariable.", 1);
 			}
 			if (waitingInput != null && waitingConstructor != null) //if we got to this point, it means that a constructor had an input
 			{
-				EngineGovernor.log("DEBUG - : : Found both an unfinished input and constructor. Putting them together.", 1);
+				//EngineGovernor.log("DEBUG - : : Found both an unfinished input and constructor. Putting them together.", 1);
 				CodeObject finishedInput = waitingInput;
 				CodeObject finishedConstructor = waitingConstructor;
 				finishedConstructor.Children.Add(finishedInput);
 				foundObjects.Add(finishedConstructor);
 				waitingInput = null;
 				waitingConstructor = null;
-				EngineGovernor.log("DEBUG - : : Nullifying waitingInput and waitingConstructor", 1);
+				//EngineGovernor.log("DEBUG - : : Nullifying waitingInput and waitingConstructor", 1);
 			}
 			if (waitingInput != null && waitingFunction != null) //this is a function with input but not any output
 			{
-				EngineGovernor.log("DEBUG - : : Found an unfinished input and function. Putting them together.", 1);
+				//EngineGovernor.log("DEBUG - : : Found an unfinished input and function. Putting them together.", 1);
 				CodeObject finishedInput = waitingInput;
 				CodeObject finishedFunction = waitingFunction;
 				finishedFunction.Children.Add(finishedInput);
 				foundObjects.Add(finishedFunction);
 				waitingInput = null;
 				waitingFunction = null;
-				EngineGovernor.log("DEBUG - : : Nullifying waitingInput and waitingFunction", 1);
+				//EngineGovernor.log("DEBUG - : : Nullifying waitingInput and waitingFunction", 1);
 			}
 			if (waitingProperty != null)
 			{
-				EngineGovernor.log("DEBUG - : : Found an unfinished property.", 1);
+				//EngineGovernor.log("DEBUG - : : Found an unfinished property.", 1);
 				CodeObject finishedProperty = waitingProperty;
 				foundObjects.Add(finishedProperty);
 				waitingProperty = null;
-				EngineGovernor.log("DEBUG - : : Nullifying waitingProperty.", 1);
+				//EngineGovernor.log("DEBUG - : : Nullifying waitingProperty.", 1);
 			}
 			if (waitingFunction != null)
 			{
-				EngineGovernor.log("DEBUG - : : Found an unfinished function.", 1);
+				//EngineGovernor.log("DEBUG - : : Found an unfinished function.", 1);
 				CodeObject finishedFunction = waitingFunction;
 				foundObjects.Add(finishedFunction);
 				waitingFunction = null;
-				EngineGovernor.log("DEBUG - : : Nullifying waitingFunction.", 1);
+				//EngineGovernor.log("DEBUG - : : Nullifying waitingFunction.", 1);
 			}
 			if (waitingConstructor != null)
 			{
-				EngineGovernor.log("DEBUG - : : Found an unfinished constructor.", 1);
+				//EngineGovernor.log("DEBUG - : : Found an unfinished constructor.", 1);
 				CodeObject finishedConstructor = waitingConstructor;
 				foundObjects.Add(finishedConstructor);
 				waitingConstructor = null;
-				EngineGovernor.log("DEBUG - : : Nullifying waitingConstructor.", 1);
+				//EngineGovernor.log("DEBUG - : : Nullifying waitingConstructor.", 1);
 			}
 
 			//last checks
@@ -822,7 +866,7 @@ namespace Engine
 			if (waitingProperty != null) { EngineGovernor.log("WARNING - waiting property object leftover after cleaning.", -1); }
 
 
-			EngineGovernor.log("DEBUG - : Finished cleaning up waiting objects.", 1);
+			//EngineGovernor.log("DEBUG - : Finished cleaning up waiting objects.", 1);
 
 			//unitTestDumpCodeObjects(foundObjects);
 			return foundObjects;
@@ -836,7 +880,7 @@ namespace Engine
 		private List<string> findTags(string source)
 		{
 			EngineGovernor.log("\tBuilding tag list...");
-			EngineGovernor.log("DEBUG - Searching for all tags in '" + source + "'", 1);
+			//EngineGovernor.log("DEBUG - Searching for all tags in '" + source + "'", 1);
 			List<string> pass = new List<string>();
 			string updatedSource = source;
 			
@@ -849,7 +893,7 @@ namespace Engine
 			while (updatedSource.Contains("@"))
 			{
 				int tagIndex = updatedSource.IndexOf("@");
-				EngineGovernor.log("DEBUG - : Found a tag delimiter at " + tagIndex, 1);
+				//EngineGovernor.log("DEBUG - : Found a tag delimiter at " + tagIndex, 1);
 
 				//check to make sure this tag delimiter isn't at the end
 				if (tagIndex == updatedSource.Length - 1) { EngineGovernor.log("WARNING - Found a tag delimiter at the end of a syntax block. Check for incorrectly specified tags.", -1); break; }
@@ -860,11 +904,11 @@ namespace Engine
 				int nextTag = updatedSource.IndexOf("@");
 				int tagDefEnd = nextTag;
 				if (nextTag == -1) { EngineGovernor.log("DEBUG - : Determined that this is the last tag in the syntax block.", 1); tagDefEnd = updatedSource.Length; }
-				EngineGovernor.log("DEBUG - : length of this tag is " + tagDefEnd, 1);
+				//EngineGovernor.log("DEBUG - : length of this tag is " + tagDefEnd, 1);
 
 				//assign current working tag
 				string thisTag = updatedSource.Substring(0, tagDefEnd);
-				EngineGovernor.log("DEBUG - : FOUND TAG - '" + thisTag + "'", 1);
+				//EngineGovernor.log("DEBUG - : FOUND TAG - '" + thisTag + "'", 1);
 
 				if (!thisTag.Contains(":"))
 				{
@@ -878,14 +922,14 @@ namespace Engine
 				tagDefinition = thisTag.Substring(0, thisTag.IndexOf(":"));
 				if (thisTag.IndexOf(":") >= thisTag.Length - 1)
 				{
-					EngineGovernor.log("DEBUG - : : Tag definition blank. (Colon at the end of the line)", 1);
+					//EngineGovernor.log("DEBUG - : : Tag definition blank. (Colon at the end of the line)", 1);
 				}
 				else
 				{
 					tagSpecification = thisTag.Substring(thisTag.IndexOf(":") + 1);
 				}
-				EngineGovernor.log("DEBUG - : : Tag definition is '" + tagDefinition + "' and specification is '" + tagSpecification + "'", 1);
-				EngineGovernor.log("DEBUG - : : Trimming tag specification...", 1);
+				//EngineGovernor.log("DEBUG - : : Tag definition is '" + tagDefinition + "' and specification is '" + tagSpecification + "'", 1);
+				//EngineGovernor.log("DEBUG - : : Trimming tag specification...", 1);
 				tagSpecification = tagSpecification.Trim();
 				pass.Add(tagDefinition);
 				pass.Add(tagSpecification);
@@ -898,21 +942,21 @@ namespace Engine
 			//------------------------------------------------------
 			//second pass, add links back into the previous tag definition
 
-			EngineGovernor.log("DEBUG - : Sending tags through second pass to untag links...", 1);
+			//EngineGovernor.log("DEBUG - : Sending tags through second pass to untag links...", 1);
 
 			//take current entries of @link and move them back to a non-null line, then make the lines that previously contained just the @link to @NULL
 			for (int i = 2; i < pass.Count; i += 2)
 			{
-				EngineGovernor.log("DEBUG - : : index " + i, 1);
-				EngineGovernor.log("DEBUG - : : line '" + pass[i] + "'", 1);
+				//EngineGovernor.log("DEBUG - : : index " + i, 1);
+				//EngineGovernor.log("DEBUG - : : line '" + pass[i] + "'", 1);
 				if (pass[i] == "l" || pass[i] == "link")
 				{
-					EngineGovernor.log("DEBUG - : : : Found a link tag", 1);
+					//EngineGovernor.log("DEBUG - : : : Found a link tag", 1);
 					int backIndex = i - 1;
 					while (pass[backIndex] == "@NULL") 
 					{
 						backIndex -= 2; //in case of two link tags in a row (keep on going back until a non-null row is found)
-						EngineGovernor.log("DEBUG - : : : last tag was already a link, and has already been nullified, moving back a little further...", 1);
+						//EngineGovernor.log("DEBUG - : : : last tag was already a link, and has already been nullified, moving back a little further...", 1);
 					}
 					pass[backIndex] += " @l:" + pass[i + 1];
 					pass[i] = "@NULL";
@@ -927,20 +971,20 @@ namespace Engine
 			//------------------------------------------------------
 			//third pass, remove all instances of @NULL from the list
 
-			EngineGovernor.log("DEBUG - : Removing instances of @NULL from tag list", 1);
+			//EngineGovernor.log("DEBUG - : Removing instances of @NULL from tag list", 1);
 
 			while (pass.IndexOf("@NULL") != -1)
 			{
 				int removalIndex = pass.IndexOf("@NULL");
-				EngineGovernor.log("DEBUG - : : Found an @NULL at " + removalIndex + ", removing...", 1);
+				//EngineGovernor.log("DEBUG - : : Found an @NULL at " + removalIndex + ", removing...", 1);
 				pass.Remove("@NULL");
 			}
 
-			EngineGovernor.log("DEBUG - : All instances of @NULL removed.", 1);
+			//EngineGovernor.log("DEBUG - : All instances of @NULL removed.", 1);
 
 			//unitTestDumpTags(pass, 3);
 
-			EngineGovernor.log("DEBUG - : Tag list built! Returning it now!", 1);
+			//EngineGovernor.log("DEBUG - : Tag list built! Returning it now!", 1);
 			return pass;
 		}
 

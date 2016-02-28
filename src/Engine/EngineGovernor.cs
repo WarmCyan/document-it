@@ -1,11 +1,11 @@
-﻿//********************************************************
-// File: EngineGovernor.cs
-// Author: Nathan Martindale
-// Date Created: 1/15/2015
-// Date Edited: 5/27/2015
-// Copyright © 2015 Digital Warrior Labs
-// Description: Class that controls the engine, and takes care of all objects, kind of a master class
-//********************************************************
+﻿//*************************************************************
+//  File: EngineGovernor.cs
+//  Date created: 1/15/2015
+//  Date edited: 2/28/2016
+//  Author: Nathan Martindale
+//  Copyright © 2016 Digital Warrior Labs
+//  Description: Class that controls the engine, and takes care of all objects, kind of a master class
+//*************************************************************
 
 //NOTE that this class follows the observable pattern. It has a list of ILogger interfaces.
 
@@ -31,6 +31,9 @@ namespace Engine
 
 		private CodeDocument m_cWorkingDocument = null;
 
+
+		private List<CodeDocument> m_cWorkingDocuments = new List<CodeDocument>();
+
 		//static variables
 		public static bool ENABLE_LOGGING = true; //if speed is a concern, set to false (will ignore all logging requests, which will save on time if there are a lot of observers)
 
@@ -51,7 +54,8 @@ namespace Engine
 		{
 			log("File analysis requested, starting parser...");
 			CodeParser parser = new CodeParser();
-			CodeDocument doc = parser.parseFile(filename);
+			//CodeDocument doc = parser.parseFile(filename);
+			CodeDocument doc = (parser.parseFile(filename))[0];
 			m_cWorkingDocument = doc;
 			log("Engine governor has received parser's document and stored it as the current working document.");
 		}
