@@ -29,7 +29,8 @@ namespace Engine
 		//member variables
 		private static List<ILogger> m_cRegisteredLogObservers = new List<ILogger>();
 
-		private CodeDocument m_cWorkingDocument = null;
+		private CodeDocument m_cWorkingDocument = null; // TODO: make this a list!
+		// TODO: take in sections, output javascript code and lists of all sections/classes associated with those sections, and then javascript can auto populate the side bar on the left of the page
 
 
 		private List<CodeDocument> m_cWorkingDocuments = new List<CodeDocument>();
