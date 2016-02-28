@@ -1,0 +1,170 @@
+<html>
+	<head>
+		<title>PhysicsEngine</title>
+		<link rel='stylesheet' type='text/css' href='api_style.css'>
+	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+	</head>
+	<body>
+
+<div id='top_band'></div>
+<div id='logo_header_area'><h1>SquareShield 0.2.5 BETA</h1></div>
+<div id='content'>
+	<h1>Class <span class='keyword'>PhysicsEngine</span></h1>
+	<p>The engine itself, this class contains all the engine constants and objects, and it takes care of handling all calculations, detecting and resolving collisions, and updating the positions of the objects. This class will also check for global functions as a pseudo "event system." Look in the functions section for more information.</p>
+
+	<hr/>
+	<p class='tabbedText'><a href='#constructorindex'>Constructor Index</a></p>
+	<p class='tabbedText'><a href='#functionindex'>Function Index</a></p>
+	<p class='tabbedText'><a href='#constantlist'>Constant List</a></p>
+	<p class='tabbedText'><a href='#propertylist'>Property List</a></p>
+	<p class='tabbedText'><a href='#constructorlist'>Constructor List</a></p>
+	<p class='tabbedText'><a href='#functionlist'>Function List</a></p>
+	<hr/>
+
+	<a name='constructorindex'></a>
+	<h2>Constructor Index</h2>
+	<p>Click on any of the following constructor names to see more detail about them below.</p>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td><code><a href='#constructor0'>PhysicsEngine</a>()</code></td>
+		</tr>
+	</table>
+
+	<a name='functionindex'></a>
+	<h2>Function Index</h2>
+	<p>Click on any of the following function names to see more detail about them below.</p>
+	<table class='dataTable'>
+		<tr><th>Modifier/Return Type</th><th>Function Name</th></tr>
+		<tr class='row1'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function0'>addEntity</a>(object)</code></td>
+		</tr>
+		<tr class='row2'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function1'>detectCollison</a>(objA, objB)</code></td>
+		</tr>
+		<tr class='row1'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function2'>physEvent_collision</a>(objA, objB, keOn1, keOn2)</code></td>
+		</tr>
+		<tr class='row2'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function3'>removeEntity</a>(object)</code></td>
+		</tr>
+		<tr class='row1'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function4'>updatePhysics</a>(dt)</code></td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='constantlist'></a>
+	<h3>Constant List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> CORRECTION_PERCENT</code> - During positional correction, this constant will be multiplied to the difference between penetration and allowed correctional slop, and that difference will be applied to the positions of the colliding objects to separate them. (Recommended value is .3)</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> CORRECTION_SLOP</code> - The distance or "slop" that will be allowed in object overlap before positional correction is applied. This is important so that objects don't rapidly "vibrate" when multiple objects with gravity applied stack on each other. (this can also be affected by CORRECTION_PERCENT.) Recommended value is .001.</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> MAX_PENETRATION</code> - The "opposite" limit of CORRECTION_SLOP. If an object penetrates farther than this constant allows, during the positional correction process, objects will be moved absolutely outside of this range, regardless of the CORRECTION_PERCENT. (Note, this will cause glitching if there are a lot of cluttered objects with gravity or some other force applied.) Recommended value is 10. (This is more dependent on relative object size however.)</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> MAXIMUM_TIME_TIC</code> - The frame dt limit, or maximum change in time allowed (in milliseconds between frames.) If the passed in dt (for the updatePhysics() function) is ever greater than this, the engine clamps to this value, meaning that the simulation will run slower, but it will retain accuracy. (Otherwise, drastic jumping/glitching would occur.) The recommended value for this is 25 (milliseconds) which is the equivalent of 40 fps. Any time the frame rate dips below this, the engine will slow down to match.</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> VELOCITY_CLAMP</code> - If at any point during movement, if an objects velocity is smaller than this constant, it's truncated to zero to reduce on calculations required. Recommended value is .00001.</td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='propertylist'></a>
+	<h3>Property List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> getEntities()</code> - Returns the array of entities evaluated by the engine.</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> ticClamped</code> - Boolean value representing whether time clamping is currently active or not. (See MAXIMUM_TIME_TIC constant.) NOTE: THIS PROPERTY IS FOR INFORMATIONAL ACCESS ONLY. There is no need or reason to manually edit its value. Its intended purpose is for whatever interface that uses this engine to check this property and if desired, display information/warnings related to the frame rate. (Also note, in some later version of this engine, this may be converted into the pseudo event system.)collection of CollisionManifolds{</td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='constructorlist'></a>
+	<h3>Constructor List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td>
+				<a name='constructor0'></a><code class='biggerCode'>PhysicsEngine()</code></br></br>
+			</td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='functionlist'></a>
+	<h3>Function List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td>
+				<a name='function0'></a><span class='function_title'>addEntity</span></br><code class='biggerCode'><span class='keyword'></span> addEntity(object)</code></br></br>
+				<p>Adds the specified object to the entities list, where it will be analyzed and updated by the engine in the updatePhysics() function.</p>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> object</code><span class='descriptionText'> - The object to be stored in the entities array. NOTE: This object must contain a physics object</span></p>
+			</td>
+		</tr>
+		<tr class='row2'>
+			<td>
+				<a name='function1'></a><span class='function_title'>detectCollison</span></br><code class='biggerCode'><span class='keyword'></span> detectCollison(objA, objB)</code></br></br>
+				<p>Checks whether the two objects have a common layer and if they are colliding. NOTE: The two objects MUST have a <a href='physics.html'>Physics</a> instance named 'physics'.</p>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> objA</code><span class='descriptionText'> - The first object involved in the collision. (Must have Physics instance.)</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> objB</code><span class='descriptionText'> - The second object to check against the first object for a collison. (Must have Physics instance.)</span></p>
+				<p><b>Output</b></p>
+				<p class='tabbedText'>Returns true if they overlap and have a common layer, and false if they don't collide.</p>
+			</td>
+		</tr>
+		<tr class='row1'>
+			<td>
+				<a name='function2'></a><span class='function_title'>physEvent_collision</span></br><code class='biggerCode'><span class='keyword'></span> physEvent_collision(objA, objB, keOn1, keOn2)</code></br></br>
+				<p>EVENT - THIS FUNCTION IS NOT IMPLEMENTED. As a basic event system, the physics engine will check to see if a global function physEvent_Collision() exists, and if so it is called whenever a collision occurs. If you want to run a certain piece of code on every collision, you can implement this function yourself on a global scope.</p>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> objA</code><span class='descriptionText'> - The first object involved in the collision.</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> objB</code><span class='descriptionText'> - The second object involved in the collision.</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> keOn1</code><span class='descriptionText'> - Amount of kinetic energy transferred to objA. This can be used to implement a damage system.</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> keOn2</code><span class='descriptionText'> - Amount of kinetic energy transferred to objB.</span></p>
+			</td>
+		</tr>
+		<tr class='row2'>
+			<td>
+				<a name='function3'></a><span class='function_title'>removeEntity</span></br><code class='biggerCode'><span class='keyword'></span> removeEntity(object)</code></br></br>
+				<p>Searches the entities array based on the physics id system and removes it when found. NOTE: Keep in mind that if monitoring this list while removing from it, all indicies of objects after the one passed in will CHANGE. This function returns the removed object's old index so you can update any variables as necessary.</p>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> object</code><span class='descriptionText'> - The object to be removed from the entities array.</span></p>
+				<p><b>Output</b></p>
+				<p class='tabbedText'>Returns the previous array index of the removed object, or -1 if not found.</p>
+			</td>
+		</tr>
+		<tr class='row1'>
+			<td>
+				<a name='function4'></a><span class='function_title'>updatePhysics</span></br><code class='biggerCode'><span class='keyword'></span> updatePhysics(dt)</code></br></br>
+				<p>Analyzes every object in the entities array, checking for collisions, resolving collisions, and updating positions and velocities of all entities. This function should be called once every animation frame.</p>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> dt</code><span class='descriptionText'> - The amount of time in milliseconds since the last updatePhysics() call. (This engine is TIME based, rather than FRAME based.)</span></p>
+			</td>
+		</tr>
+	</table>
+	</div>
+	<div id='bottom_band'>
+		<div id='footer_center'><p><i>Generated by Document It engine 1.0.166.2</i></br>Copyright © 2015 Digital Warrior Labs</p>
+	</div>
+</body>
+</html>

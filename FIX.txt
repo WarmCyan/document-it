@@ -1,3 +1,7 @@
+2/27/2016
+--------------------
+	- BUG - Calling dici on project.apiproj should set directory of program to whatever folder .apiproj is in
+
 6/17/2015
 --------------------
 	- BUG - input parameters of a constructor not checking for @l tags

@@ -1,0 +1,147 @@
+/*************************************************
+	File: api_style.css
+	Author: Nathan Martindale
+	Date created: 1/19/2015
+	Date edited: 5/20/2015
+	Copyright © 2015 Digital Warrior Labs
+	
+	Style version: 1.1
+*************************************************/
+
+/* Nice, safe, editale stuff is up here. Feel free to mess around with these values
+to personalize your documentation! */
+
+/* -- COLORS -- */
+
+body { background-color: #CDEDD9; } 
+a { color: #338855; } 
+h3 { color: #FFFFFF; background-color: #BB3344; }
+
+.keyword { color: #0E4EAD; }
+.descriptionText { color: #BB3344; } /* This only applies to descriptions of input variables. */
+
+.biggerCode { background-color: rgba(0, 0, 0, .20); }
+
+.row1 { background-color: #FBFEFB; } /* For banded rows. Color of odd-numbered rows. */
+.row2 { background-color: #E1F4E5; } /* For banded rows. Color of even-numbered rows. */
+
+.dataTable { background-color: #FFFFFF; } /* This ONLY affects the header row of the function index table. */
+
+#top_band { background-color: #338855; } /* The small colored banner that runs accross the top. */
+#logo_header_area { color: #FFFFFF; } /* Color of the header text inside top_band. */
+#content { background-color: #FFFFFF; }
+#bottom_band { background-color: #555555; } /* Footer, colored band at the bottom of the page. */
+#footer_center { color: #AAAAAA; }
+
+
+/* -- FONTS -- */
+
+body { font-family: Arial; }
+
+
+/* -- BORDERS -- */
+
+hr { border: 3px solid #000000; }
+.dataTable, .dataTable td { border: 1px solid #B3B3B3; }
+#content
+{
+	border-left: 1px solid #AAAAAA;
+	border-right: 2px solid #777777;
+}
+
+
+/* -- MISC SAFE EDITING -- */
+
+p { font-size: 10pt; }
+a { font-weight: bold; }
+.biggerCode { font-size: 12pt; }
+.mediumCode { font-size: 12pt; }
+.function_title { font-weight: bold; font-size: 12pt; }
+.tabbedText { padding-left: 5em; }
+.keyword { font-weight: bold; }
+
+
+/* ------------------------------ END SAFE EDITING SECTION. ------------------------------ */
+/* ----------------------------------------------------------------------------------------*/
+/* Everything below this line is being marked NOT safe for editing for a reason! Don't touch
+anything below this unless you're a very brave soul who knows exactly what they're doing! */
+
+
+body { margin-bottom: -20px; }
+
+h3
+{
+	width: 100%;
+	padding: 10px;
+	margin: -10px;
+	margin-bottom: 0px;
+}
+
+.dataTable { width: 100%; }
+
+.dataTable, .dataTable td
+{
+	border-collapse: collapse;
+	padding: 10px;
+	font-size: 10pt;
+}
+
+.biggerCode
+{
+	padding: 10px;
+	margin-left: -10px;
+}
+
+.function_title
+{
+	margin-bottom: 5px;
+	display: block;
+}
+
+.return_modifier_box { width: 30%; }
+
+#content
+{
+	z-index: 2;
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
+	margin-top: 50px;
+	padding: 10px;
+}
+
+#logo_header_area
+{
+	position: absolute;
+	top: -15px;
+}
+
+#top_band
+{
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 50px;
+	z-index: -1;
+}
+
+#bottom_band
+{
+	bottom: -10px;
+	left: 0;
+	right: 0;
+	height: 50px;
+	display: block;
+	margin: 0px;
+	width: 100%;
+	padding: 10px;
+	padding-top: 2px;
+	margin-left: -12px;
+}
+
+#footer_center
+{
+	text-align: center;
+}
