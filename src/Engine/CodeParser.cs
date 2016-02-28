@@ -260,7 +260,7 @@ namespace Engine
 		//(returns 0 if no comment)
 		private int isCommentLine(bool blockComment, int requestedLineIndex)
 		{
-			if (requestedLineIndex >= m_cFileLines.Count) { EngineGovernor.log("DEBUG - WARNING - Tried analyzing too far and went past total line count. Returning 0.", 1); return 0; }
+			if (requestedLineIndex >= m_cFileLines.Count) { /*EngineGovernor.log("DEBUG - WARNING - Tried analyzing too far and went past total line count. Returning 0.", 1);*/ return 0; }
 			string line = m_cFileLines[requestedLineIndex];
 
 			//if not in a block comment, check for obvious '//'
@@ -459,7 +459,7 @@ namespace Engine
 
 		private List<CodeObject> analyzeSyntaxBlock(List<string> linesBlock)
 		{
-			EngineGovernor.log("DEBUG - ================================== Analyzing a syntax block ==============================", 1);
+			//EngineGovernor.log("DEBUG - ================================== Analyzing a syntax block ==============================", 1);
 			//first combine all into one string, remove excess spaces
 			string syntax = "";
 			
@@ -903,7 +903,7 @@ namespace Engine
 				//to make sure that the end tag specification is BEFORE the next tag
 				int nextTag = updatedSource.IndexOf("@");
 				int tagDefEnd = nextTag;
-				if (nextTag == -1) { EngineGovernor.log("DEBUG - : Determined that this is the last tag in the syntax block.", 1); tagDefEnd = updatedSource.Length; }
+				if (nextTag == -1) { /*EngineGovernor.log("DEBUG - : Determined that this is the last tag in the syntax block.", 1);*/ tagDefEnd = updatedSource.Length; }
 				//EngineGovernor.log("DEBUG - : length of this tag is " + tagDefEnd, 1);
 
 				//assign current working tag

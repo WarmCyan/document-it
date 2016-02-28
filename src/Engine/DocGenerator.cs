@@ -44,7 +44,7 @@ namespace Engine
 		{
 			//first assign root object
 			m_cRoot = m_cDocument.CodeObjects[0];
-			EngineGovernor.log("DEBUG - Saved a root object.", 1);
+			//EngineGovernor.log("DEBUG - Saved a root object.", 1);
 
 			if (m_cRoot.CodeType != "class" && m_cRoot.CodeType != "interface") { EngineGovernor.log("ERROR - Could not find a root code object of type class or interface. Generator currently has no implementation for this type of file.", -1); return null; }
 
@@ -93,26 +93,26 @@ namespace Engine
 			List<CodeObject> docObjects = m_cRoot.Children;
 			int objectCount = docObjects.Count;
 
-			EngineGovernor.log("DEBUG - Preparing to alphabetize " + objectCount + " objects", 1);
+			//EngineGovernor.log("DEBUG - Preparing to alphabetize " + objectCount + " objects", 1);
 
 			//foreach list (continually decreasing) starting at 1 to avoid root (0)
 			for (int startIndex = 1; startIndex < objectCount - 1; startIndex++)
 			{
-				EngineGovernor.log("DEBUG - : Starting from index " + startIndex, 1);
+				//EngineGovernor.log("DEBUG - : Starting from index " + startIndex, 1);
 				int indexOfLowest = startIndex; //by default, say the first one in list is lowest
-				EngineGovernor.log("DEBUG - : : Default lowest is " + docObjects[indexOfLowest].Name, 1);
+				//EngineGovernor.log("DEBUG - : : Default lowest is " + docObjects[indexOfLowest].Name, 1);
 				for (int i = startIndex + 1; i < objectCount; i++)
 				{
-					EngineGovernor.log("DEBUG - : : Comparing " + docObjects[indexOfLowest].Name + " with " + docObjects[i].Name, 1);
+					//EngineGovernor.log("DEBUG - : : Comparing " + docObjects[indexOfLowest].Name + " with " + docObjects[i].Name, 1);
 
 					//change if 1
 					int result = compareAlpha(docObjects[indexOfLowest].Name, docObjects[i].Name);
-					if (result == 1) { indexOfLowest = i; EngineGovernor.log("DEBUG - : : : " + docObjects[i].Name + " was lower, replacing index of lowest.", 1); }
+					if (result == 1) { indexOfLowest = i; /*EngineGovernor.log("DEBUG - : : : " + docObjects[i].Name + " was lower, replacing index of lowest.", 1);*/ }
 				}
 				
 				//checked all of them, now swap
 				docObjects = swapIndicies(indexOfLowest, startIndex, docObjects);
-				EngineGovernor.log("DEBUG - : : Swapped " + indexOfLowest + " with " + startIndex, 1);
+				//EngineGovernor.log("DEBUG - : : Swapped " + indexOfLowest + " with " + startIndex, 1);
 			}
 
 			m_cRoot.Children = docObjects;
@@ -173,7 +173,7 @@ namespace Engine
 		//returns a version of the link text WITHOUT punctuation, and lowercase, etc. etc....
 		private string makeSafeLink(string originalLink)
 		{
-			EngineGovernor.log("DEBUG - : Trying to make '" + originalLink + "' a safe link", 1);
+			//EngineGovernor.log("DEBUG - : Trying to make '" + originalLink + "' a safe link", 1);
 			string link = originalLink.ToLower();
 
 			link = takeOutString(link, ",");
@@ -193,7 +193,7 @@ namespace Engine
 			link = takeOutString(link, "/");
 			link = takeOutString(link, "\\");
 
-			EngineGovernor.log("DEBUG - : Resultant safe link: '" + link + "'", 1);
+			//EngineGovernor.log("DEBUG - : Resultant safe link: '" + link + "'", 1);
 
 			return link;
 		}
@@ -201,14 +201,14 @@ namespace Engine
 		//removes the specified string from the given string, IF IT HAS IT (this function performs the check. Returns original string if character(s) aren't found)
 		private string takeOutString(string source, string removeMe)
 		{
-			EngineGovernor.log("DEBUG - : Trying to remove '" + removeMe + "' from '" + source + "'", 1);
+			//EngineGovernor.log("DEBUG - : Trying to remove '" + removeMe + "' from '" + source + "'", 1);
 			while (source.Contains(removeMe))
 			{
-				EngineGovernor.log("DEBUG - : : Found string to remove", 1);
+				//EngineGovernor.log("DEBUG - : : Found string to remove", 1);
 				source = source.Remove(source.IndexOf(removeMe), 1); 
-				EngineGovernor.log("DEBUG - : : Removed it! Source now reads '" + source + "'", 1);
+				//EngineGovernor.log("DEBUG - : : Removed it! Source now reads '" + source + "'", 1);
 			}
-			EngineGovernor.log("DEBUG - : Removed all instances of given string.", 1);
+			//EngineGovernor.log("DEBUG - : Removed all instances of given string.", 1);
 
 			return source;
 		}
@@ -216,7 +216,7 @@ namespace Engine
 		//will insert <a> tags for any links it finds in the source string
 		private string convertLinkTags(string source)
 		{
-			EngineGovernor.log("DEBUG - : Checking '" + source + "' for links...", 1);
+			//EngineGovernor.log("DEBUG - : Checking '" + source + "' for links...", 1);
 			if (source.Contains("@l:") || source.Contains("@link:"))
 			{
 				string[] words = source.Split(' ');
@@ -225,36 +225,36 @@ namespace Engine
 				{
 					if (words[i].Contains("@l:") || words[i].Contains("@link:"))
 					{
-						EngineGovernor.log("DEBUG - : : Found a link!", 1);
+						//EngineGovernor.log("DEBUG - : : Found a link!", 1);
 						string linkText = "";
 						if (words[i].IndexOf("@l:") != -1 && words[i].Length > words[i].IndexOf("@l:") + 3)
 						{
 							linkText = words[i].Substring(words[i].IndexOf("@l:") + 3);
-							EngineGovernor.log("DEBUG - : : : Found shortened version of link tag, taking link text: '" + linkText + "'", 1);
+							//EngineGovernor.log("DEBUG - : : : Found shortened version of link tag, taking link text: '" + linkText + "'", 1);
 						}
 						else if (words[i].IndexOf("@link:") != -1 && words[i].Length > words[i].IndexOf("@link:") + 6)
 						{
 							linkText = words[i].Substring(words[i].IndexOf("@link:") + 6);
-							EngineGovernor.log("DEBUG - : : : Found long version of link tag, taking link text: '" + linkText + "'", 1);
+							//EngineGovernor.log("DEBUG - : : : Found long version of link tag, taking link text: '" + linkText + "'", 1);
 						}
 						else { EngineGovernor.log("WARNING - Found an empty link tag: '" + source + "'", -1); }
 
 						//string endpunctuation = ""; 
 
 						words[i] = "<a href='" + makeSafeLink(linkText) + ".html'>" + linkText + "</a>";
-						EngineGovernor.log("DEBUG - : : : Link now reads: '" + words[i] + "'", 1);
+						//EngineGovernor.log("DEBUG - : : : Link now reads: '" + words[i] + "'", 1);
 					}
 
 					//recombine into the result string
 					if (i == 0) { result = words[i]; }
 					else { result += " " + words[i]; }
 				}
-				EngineGovernor.log("DEBUG - : Finished substituting links. '" + result + "'", 1);
+				//EngineGovernor.log("DEBUG - : Finished substituting links. '" + result + "'", 1);
 				return result;
 			}
 			else
 			{
-				EngineGovernor.log("DEBUG - : No links found in string.", 1);
+				//EngineGovernor.log("DEBUG - : No links found in string.", 1);
 				return source;
 			}
 		}
@@ -262,11 +262,11 @@ namespace Engine
 		//gets the stuff within the parenethesis for parameters for input of the given object (either constructor or function) 
 		private string getFunctionParameters(CodeObject obj)
 		{
-			EngineGovernor.log("DEBUG - Searching code object for input parameters...", 1);
+			//EngineGovernor.log("DEBUG - Searching code object for input parameters...", 1);
 			if (obj.CodeType != "function" && obj.CodeType != "constructor") { EngineGovernor.log("ERROR - Tried to get the function parameters of an object that wasn't a class or function", -1); return ""; }
 			if (obj.Inputs.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - : Found an input!", 1);
+				//EngineGovernor.log("DEBUG - : Found an input!", 1);
 
 				string returnString = "";		
 				CodeObject input = obj.Inputs[0];
@@ -281,7 +281,7 @@ namespace Engine
 			}
 			else
 			{
-				EngineGovernor.log("DEBUG - Found no inputs in the object, returning an empty string.", 1);
+				//EngineGovernor.log("DEBUG - Found no inputs in the object, returning an empty string.", 1);
 				return "";
 			}
 		}
@@ -289,19 +289,19 @@ namespace Engine
 		//will print out the detailed version of the input parameters of the passed input object
 		private string getInputDetails(CodeObject input)
 		{
-			EngineGovernor.log("DEBUG - Preparing to gather the details of the input...", 1);
+			//EngineGovernor.log("DEBUG - Preparing to gather the details of the input...", 1);
 			string returnString = "";
 			returnString += "\n<p><b>Input Parameters</b></p>";
 
 			foreach (CodeObject variable in input.Variables)
 			{
-				EngineGovernor.log("DEBUG - : Printing out variable '" + variable.Name + "'", 1);
+				//EngineGovernor.log("DEBUG - : Printing out variable '" + variable.Name + "'", 1);
 				returnString += "\n\t<p class='tabbedText'><code class='mediumCode'><span class='keyword'>" + convertLinkTags(variable.Type) + "</span> " + variable.Name + "</code>";
 
-				if (variable.Description != "") {  EngineGovernor.log("DEBUG - : : Found description for variable.", 1); returnString += "<span class='descriptionText'> - " + variable.Description + "</span>"; }
+				if (variable.Description != "") {  /*EngineGovernor.log("DEBUG - : : Found description for variable.", 1);*/ returnString += "<span class='descriptionText'> - " + variable.Description + "</span>"; }
 				returnString += "</p>";
 			}
-			EngineGovernor.log("DEBUG - Gathered all input information.", 1);
+			//EngineGovernor.log("DEBUG - Gathered all input information.", 1);
 			return returnString;
 		}
 
@@ -313,7 +313,7 @@ namespace Engine
 		//top phrase is the little text in the top bar (default is @Document It!)
 		private void htmlHead()
 		{
-			EngineGovernor.log("DEBUG - Adding header stuff to HTML string", 1);
+			//EngineGovernor.log("DEBUG - Adding header stuff to HTML string", 1);
 			html("<html>\n\t<head>");
 			html("\n\t\t<title>" + m_cRoot.Name + "</title>");
 			html("\n\t\t<link rel='stylesheet' type='text/css' href='api_style.css'>");
@@ -322,7 +322,7 @@ namespace Engine
 			html("\n\n<div id='top_band'></div>");
 			html("\n<div id='logo_header_area'><h1>" + m_sTopHeaderText + "</h1></div>");
 			html("\n<div id='content'>");
-			EngineGovernor.log("DEBUG - Finished header stuff", 1);
+			//EngineGovernor.log("DEBUG - Finished header stuff", 1);
 		}
 		
 		//class name and description (returns the name for info purposes)
@@ -330,19 +330,19 @@ namespace Engine
 		{
 			string rootName = "";
 
-			EngineGovernor.log("DEBUG - Inserting root information.", 1);
+			//EngineGovernor.log("DEBUG - Inserting root information.", 1);
 			html("\n\t<h1>");
 			if (m_cRoot.CodeType == "interface") 
 			{ 
 				html("Interface"); 
 				rootName = "interface"; 
-				EngineGovernor.log("DEBUG - : Root is an interface.", 1); 
+				//EngineGovernor.log("DEBUG - : Root is an interface.", 1); 
 			}
 			else if (m_cRoot.CodeType == "class") 
 			{
 				html("Class");
 				rootName = "class";
-				EngineGovernor.log("DEBUG - : Root is a class.", 1); 
+				//EngineGovernor.log("DEBUG - : Root is a class.", 1); 
 			}
 			html(" <span class='keyword'>" + m_cRoot.Name + "</span></h1>");
 
@@ -351,7 +351,7 @@ namespace Engine
 			//description
 			string description = convertLinkTags(m_cRoot.Description);
 			html("\n\t<p>" + description + "</p>\n\n\t<hr/>");
-			EngineGovernor.log("DEBUG - Finished root information.", 1);
+			//EngineGovernor.log("DEBUG - Finished root information.", 1);
 
 			List<string> info = new List<string>();
 			info.Add(rootName);
@@ -362,39 +362,39 @@ namespace Engine
 		//links to anchors within documents as needed
 		private void tableOfContents()
 		{
-			EngineGovernor.log("DEBUG - Preparing table of contents.", 1);
+			//EngineGovernor.log("DEBUG - Preparing table of contents.", 1);
 			if (m_cRoot.Constructors.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - : Found constructors, creating a link to the constructor index.", 1);
+				//EngineGovernor.log("DEBUG - : Found constructors, creating a link to the constructor index.", 1);
 				html("\n\t<p class='tabbedText'><a href='#constructorindex'>Constructor Index</a></p>");
 			}
 			if (m_cRoot.Functions.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - : Found functions, creating a link to the function index.", 1);
+				//EngineGovernor.log("DEBUG - : Found functions, creating a link to the function index.", 1);
 				html("\n\t<p class='tabbedText'><a href='#functionindex'>Function Index</a></p>");
 			}
 			if (m_cRoot.Constants.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - : Found constants, creating a link to the constant list.", 1);
+				//EngineGovernor.log("DEBUG - : Found constants, creating a link to the constant list.", 1);
 				html("\n\t<p class='tabbedText'><a href='#constantlist'>Constant List</a></p>");
 			}
 			if (m_cRoot.Properties.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - : Found properties, creating a link to the property list.", 1);
+				//EngineGovernor.log("DEBUG - : Found properties, creating a link to the property list.", 1);
 				html("\n\t<p class='tabbedText'><a href='#propertylist'>Property List</a></p>");
 			}
 			if (m_cRoot.Constructors.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - : Found constructors, creating a link to the constructor list.", 1);
+				//EngineGovernor.log("DEBUG - : Found constructors, creating a link to the constructor list.", 1);
 				html("\n\t<p class='tabbedText'><a href='#constructorlist'>Constructor List</a></p>");
 			}
 			if (m_cRoot.Functions.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - : Found functions, creating a link to the functions list.", 1);
+				//EngineGovernor.log("DEBUG - : Found functions, creating a link to the functions list.", 1);
 				html("\n\t<p class='tabbedText'><a href='#functionlist'>Function List</a></p>");
 			}
 			html("\n\t<hr/>");
-			EngineGovernor.log("DEBUG - Finished table of contents.", 1);
+			//EngineGovernor.log("DEBUG - Finished table of contents.", 1);
 		}
 
 		//prints out the basic list of constructors
@@ -402,7 +402,7 @@ namespace Engine
 		{
 			if (m_cRoot.Constructors.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - Found constructors, creating constructor index...", 1);
+				//EngineGovernor.log("DEBUG - Found constructors, creating constructor index...", 1);
 				html("\n\n\t<a name='constructorindex'></a>\n\t<h2>Constructor Index</h2>\n\t<p>Click on any of the following constructor names to see more detail about them below.</p>");
 				html("\n\t<table class='dataTable'>");
 
@@ -410,7 +410,7 @@ namespace Engine
 
 				for (int i = 0; i < m_cRoot.Constructors.Count; i++)
 				{
-					EngineGovernor.log("DEBUG - : Printing constructor...", 1);
+					//EngineGovernor.log("DEBUG - : Printing constructor...", 1);
 					CodeObject current = m_cRoot.Constructors[i];
 					html("\n\t\t<tr class='row" + row + "'>");
 					html("\n\t\t\t<td><code><a href='#constructor" + i + "'>" + current.Name + "</a>(" + getFunctionParameters(current) + ")</code></td>");
@@ -421,9 +421,9 @@ namespace Engine
 					else { row = 1; }
 				}
 				html("\n\t</table>");
-				EngineGovernor.log("DEBUG - Finished creating constructor index.", 1);
+				//EngineGovernor.log("DEBUG - Finished creating constructor index.", 1);
 			}
-			else { EngineGovernor.log("DEBUG - No constructors, ignoring constructor index...", 1); }
+			//else { EngineGovernor.log("DEBUG - No constructors, ignoring constructor index...", 1); }
 		}
 
 		//prints out the basic list of functions
@@ -431,7 +431,7 @@ namespace Engine
 		{
 			if (m_cRoot.Functions.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - Found functions, creating function index...", 1);
+				//EngineGovernor.log("DEBUG - Found functions, creating function index...", 1);
 				html("\n\n\t<a name='functionindex'></a>\n\t<h2>Function Index</h2>\n\t<p>Click on any of the following function names to see more detail about them below.</p>");
 				html("\n\t<table class='dataTable'>\n\t\t<tr><th>Modifier/Return Type</th><th>Function Name</th></tr>");
 
@@ -439,7 +439,7 @@ namespace Engine
 
 				for (int i = 0; i < m_cRoot.Functions.Count; i++)
 				{
-					EngineGovernor.log("DEBUG - : Printing function...", 1);
+					//EngineGovernor.log("DEBUG - : Printing function...", 1);
 					CodeObject current = m_cRoot.Functions[i];
 					html("\n\t\t<tr class='row" + row + "'>");
 					html("\n\t\t\t<td class='return_modifier_box'><code><span class='keyword'>" + convertLinkTags(current.Type) + "</span></code></td>");
@@ -451,9 +451,9 @@ namespace Engine
 					else { row = 1; }
 				}
 				html("\n\t</table>");
-				EngineGovernor.log("DEBUG - Finished creating function index.", 1);
+				//EngineGovernor.log("DEBUG - Finished creating function index.", 1);
 			}
-			else { EngineGovernor.log("DEBUG - No functions, ignoring function index...", 1); }
+			//else { EngineGovernor.log("DEBUG - No functions, ignoring function index...", 1); }
 		}
 
 		//prints out each constructor with its details
@@ -461,7 +461,7 @@ namespace Engine
 		{
 			if (m_cRoot.Constants.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - Found constants, creating constant list...", 1);
+				//EngineGovernor.log("DEBUG - Found constants, creating constant list...", 1);
 				html("\n\n</br>\n<hr/>\n\n\t<a name='constantlist'></a>\n\t<h3>Constant List</h3>");
 				html("\n\t<table class='dataTable'>");
 
@@ -469,7 +469,7 @@ namespace Engine
 
 				for (int i = 0; i < m_cRoot.Constants.Count; i++)
 				{
-					EngineGovernor.log("DEBUG - : Printing Constant...", 1);
+					//EngineGovernor.log("DEBUG - : Printing Constant...", 1);
 					CodeObject current = m_cRoot.Constants[i];
 					html("\n\t\t<tr class='row" + row + "'>");
 					html("\n\t\t\t<td><code class='biggerCode'><span class='keyword'>" + convertLinkTags(current.Type) + "</span> " + current.Name + "</code>");
@@ -481,9 +481,9 @@ namespace Engine
 					else { row = 1; }
 				}
 				html("\n\t</table>");
-				EngineGovernor.log("DEBUG - Finished creating constant list.", 1);
+				//EngineGovernor.log("DEBUG - Finished creating constant list.", 1);
 			}
-			else { EngineGovernor.log("DEBUG - No constants, ignoring constant list...", 1); }
+			//else { EngineGovernor.log("DEBUG - No constants, ignoring constant list...", 1); }
 		}
 
 		//prints out each property with its details
@@ -491,7 +491,7 @@ namespace Engine
 		{
 			if (m_cRoot.Properties.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - Found properties, creating property list...", 1);
+				//EngineGovernor.log("DEBUG - Found properties, creating property list...", 1);
 				html("\n\n</br>\n<hr/>\n\n\t<a name='propertylist'></a>\n\t<h3>Property List</h3>");
 				html("\n\t<table class='dataTable'>");
 
@@ -499,7 +499,7 @@ namespace Engine
 
 				for (int i = 0; i < m_cRoot.Properties.Count; i++)
 				{
-					EngineGovernor.log("DEBUG - : Printing property...", 1);
+					//EngineGovernor.log("DEBUG - : Printing property...", 1);
 					CodeObject current = m_cRoot.Properties[i];
 					html("\n\t\t<tr class='row" + row + "'>");
 					html("\n\t\t\t<td><code class='biggerCode'><span class='keyword'>" + convertLinkTags(current.Type) + "</span> " + current.Name + "</code>");
@@ -511,9 +511,9 @@ namespace Engine
 					else { row = 1; }
 				}
 				html("\n\t</table>");
-				EngineGovernor.log("DEBUG - Finished creating properties list.", 1);
+				//EngineGovernor.log("DEBUG - Finished creating properties list.", 1);
 			}
-			else { EngineGovernor.log("DEBUG - No constants, ignoring property list...", 1); }
+			//else { EngineGovernor.log("DEBUG - No constants, ignoring property list...", 1); }
 		}
 
 		//prints out each constructor with its details
@@ -521,7 +521,7 @@ namespace Engine
 		{
 			if (m_cRoot.Constructors.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - Found constructors, creating constructor list...", 1);
+				//EngineGovernor.log("DEBUG - Found constructors, creating constructor list...", 1);
 				html("\n\n</br>\n<hr/>\n\n\t<a name='constructorlist'></a>\n\t<h3>Constructor List</h3>");
 				html("\n\t<table class='dataTable'>");
 
@@ -529,7 +529,7 @@ namespace Engine
 
 				for (int i = 0; i < m_cRoot.Constructors.Count; i++)
 				{
-					EngineGovernor.log("DEBUG - : Printing constructor...", 1);
+					//EngineGovernor.log("DEBUG - : Printing constructor...", 1);
 					CodeObject current = m_cRoot.Constructors[i];
 					html("\n\t\t<tr class='row" + row + "'>");
 					html("\n\t\t\t<td>\n\t\t\t\t<a name='constructor" + i + "'></a><code class='biggerCode'>" + current.Name + "(" + getFunctionParameters(current) + ")</code></br></br>");
@@ -541,7 +541,7 @@ namespace Engine
 					//check for inputs
 					if (current.Inputs.Count > 0)
 					{
-						EngineGovernor.log("DEBUG - : An input was found!", 1);
+						//EngineGovernor.log("DEBUG - : An input was found!", 1);
 						html(getInputDetails(current.Inputs[0]));
 					}
 
@@ -552,9 +552,9 @@ namespace Engine
 					else { row = 1; }
 				}
 				html("\n\t</table>");
-				EngineGovernor.log("DEBUG - Finished creating constructor list.", 1);
+				//EngineGovernor.log("DEBUG - Finished creating constructor list.", 1);
 			}
-			else { EngineGovernor.log("DEBUG - No constants, ignoring constructor list...", 1); }
+			//else { EngineGovernor.log("DEBUG - No constants, ignoring constructor list...", 1); }
 		}
 
 		//prints out each constructor with its details
@@ -562,7 +562,7 @@ namespace Engine
 		{
 			if (m_cRoot.Functions.Count > 0)
 			{
-				EngineGovernor.log("DEBUG - Found functions, creating function list...", 1);
+				//EngineGovernor.log("DEBUG - Found functions, creating function list...", 1);
 				html("\n\n</br>\n<hr/>\n\n\t<a name='functionlist'></a>\n\t<h3>Function List</h3>");
 				html("\n\t<table class='dataTable'>");
 
@@ -570,7 +570,7 @@ namespace Engine
 
 				for (int i = 0; i < m_cRoot.Functions.Count; i++)
 				{
-					EngineGovernor.log("DEBUG - : Printing function...", 1);
+					//EngineGovernor.log("DEBUG - : Printing function...", 1);
 					CodeObject current = m_cRoot.Functions[i];
 					html("\n\t\t<tr class='row" + row + "'>");
 					html("\n\t\t\t<td>\n\t\t\t\t<a name='function" + i + "'></a><span class='function_title'>" + current.Name + "</span></br><code class='biggerCode'><span class='keyword'>" + convertLinkTags(current.Type) + "</span> " + current.Name + "(" + getFunctionParameters(current) + ")</code></br></br>");
@@ -582,14 +582,14 @@ namespace Engine
 					//check for inputs
 					if (current.Inputs.Count > 0)
 					{
-						EngineGovernor.log("DEBUG - : An input was found!", 1);
+						//EngineGovernor.log("DEBUG - : An input was found!", 1);
 						html(getInputDetails(current.Inputs[0]));
 					}
 
 					//check for output
 					if (current.Outputs.Count > 0)
 					{
-						EngineGovernor.log("DEBUG - : An output was found!", 1);
+						//EngineGovernor.log("DEBUG - : An output was found!", 1);
 						html("\n\t\t\t\t<p><b>Output</b></p>");
 						html("\n\t\t\t\t<p class='tabbedText'>" + convertLinkTags(current.Outputs[0].Description) + "</p>");
 					}
@@ -601,19 +601,19 @@ namespace Engine
 					else { row = 1; }
 				}
 				html("\n\t</table>");
-				EngineGovernor.log("DEBUG - Finished creating function list.", 1);
+				//EngineGovernor.log("DEBUG - Finished creating function list.", 1);
 			}
-			else { EngineGovernor.log("DEBUG - No constants, ignoring function list...", 1); }
+			//else { EngineGovernor.log("DEBUG - No constants, ignoring function list...", 1); }
 		}
 
 		//prints out the final HTML footer stuffs
 		private void footerStuff()
 		{
-			EngineGovernor.log("DEBUG - Writing out footer stuff.", 1);
+			//EngineGovernor.log("DEBUG - Writing out footer stuff.", 1);
 			html("\n\t</div>\n\t<div id='bottom_band'>\n\t\t<div id='footer_center'>");
 			html("<p><i>Generated by Document It engine " + EngineGovernor.VERSION() + "</i></br>Copyright © 2015 Digital Warrior Labs</p>");
 			html("\n\t</div>\n</body>\n</html>");
-			EngineGovernor.log("DEBUG - Footer complete.", 1);
+			//EngineGovernor.log("DEBUG - Footer complete.", 1);
 		}
 
 		//save the HTML string to a file (return filename)
@@ -622,17 +622,17 @@ namespace Engine
 			EngineGovernor.log("Writing HTML string to file...");
 
 			//make sure destFolder has proper ending
-			EngineGovernor.log("DEBUG - Checking destination folder string format...", 1);
+			//EngineGovernor.log("DEBUG - Checking destination folder string format...", 1);
 			if (!destFolder.EndsWith("/")) 
 			{
-				EngineGovernor.log("DEBUG - : Did NOT end with a slash, adding one now...", 1);
+				//EngineGovernor.log("DEBUG - : Did NOT end with a slash, adding one now...", 1);
 				destFolder += "/";
 			}
 
-			EngineGovernor.log("DEBUG - Deciding HTML file name...", 1);
+			//EngineGovernor.log("DEBUG - Deciding HTML file name...", 1);
 			string filename = makeSafeLink(m_cRoot.Name) + ".html";
-			EngineGovernor.log("DEBUG - Decided on '" + filename + "'", 1);
-			EngineGovernor.log("DEBUG - Final file path is '" + destFolder + filename + "'", 1);
+			//EngineGovernor.log("DEBUG - Decided on '" + filename + "'", 1);
+			//EngineGovernor.log("DEBUG - Final file path is '" + destFolder + filename + "'", 1);
 
 			//write out the HTML
 
@@ -651,10 +651,10 @@ namespace Engine
 			EngineGovernor.log("Checking destination '" + destFolder + "' for api_style.css");
 
 			//first correct folder if necessary
-			EngineGovernor.log("DEBUG - Checking destination folder string format...", 1);
+			//EngineGovernor.log("DEBUG - Checking destination folder string format...", 1);
 			if (!destFolder.EndsWith("/"))
 			{
-				EngineGovernor.log("DEBUG - : Did NOT end with a slash, adding one now...", 1);
+				//EngineGovernor.log("DEBUG - : Did NOT end with a slash, adding one now...", 1);
 				destFolder += "/";
 			}
 

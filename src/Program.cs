@@ -102,9 +102,9 @@ namespace DICI
 			//initialize all the logging tools
 			List<ILogger> logSystem = new List<ILogger>();
 			logSystem.Add(new ConsoleLogger(0));
-			logSystem.Add(new TextFileLogger(0));
-			logSystem.Add(new TextFileLogger("debug.txt", 1));
-			logSystem.Add(new TextFileLogger("errors.txt", -1, true));
+			//logSystem.Add(new TextFileLogger(0));
+			//logSystem.Add(new TextFileLogger("debug.txt", 1));
+			//logSystem.Add(new TextFileLogger("errors.txt", -1, true));
 
 			//initialize and run the engine
 			EngineGovernor engine = new EngineGovernor(logSystem);
