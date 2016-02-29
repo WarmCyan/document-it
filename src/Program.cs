@@ -120,7 +120,12 @@ namespace DICI
 			List<List<string>> compiledInfo = new List<List<string>>();
 
 			//project properties
-			List<string> fileList = new List<string>();
+			//List<string> fileList = new List<string>();
+			
+			int currentSectionID = -1;
+			List<string> sections = new List<string>();
+			Dictionary<int, string> fileList = new Dictionary<string, string>();  // int is index of section
+			
 			string headerText = "";
 			string destFolder = "";
 
@@ -157,6 +162,14 @@ namespace DICI
 				//if line starts with # sign or if it's blank, ignore it!
 				if (fileLines[i].StartsWith("#") || fileLines[i] == "" || fileLines[i] == " ") { continue; }
 
+				// check for section statement
+				if (fileLines[i].StartsWith(":section"))
+				{
+					string sectionName = fileLines[i].Substring(fileLines[i].IndexOf(" ")); // TODO: error checking!
+					sections.Add(sectionName);
+					currentSectionID = sections.Length - 1;
+				}
+
 				//first check for properties
 				if (fileLines[i].StartsWith("destination=") && fileLines[i].Length > 12)
 				{
@@ -169,13 +182,18 @@ namespace DICI
 				//if line isn't a property, must be file name
 				else
 				{
-					fileList.Add(fileLines[i]);
+					// first check to see if no sections involved
+					if (currentSectionID == -1) { sections.Add("All"); currentSectionID = 0; }
+					//fileList.Add(fileLines[i]);
+					fileList.Add(currentSectionID, fileLines[i]);
 				}
 			}
 			Console.WriteLine("Analyzed successfully!");
 
 			g_sProjectTitle = headerText;
 			g_sProjectFolder = destFolder;
+
+			// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 
 			//now go through the file list and generate documentation for all of them
 			Console.WriteLine("Running documentation engine on file list...");

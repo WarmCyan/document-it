@@ -35,6 +35,14 @@ namespace Engine
 
 		private List<CodeDocument> m_cWorkingDocuments = new List<CodeDocument>();
 
+		private List<string> m_cSections = new List<string>();
+
+		// in each of the dictionaries, the int represents index of section in m_cSections above that its associated with (for output javascript file)
+		private Dictionary<int, string> m_cClasses = new Dictionary<int, string>();
+		private Dictionary<int, string> m_cInterfaces = new Dictionary<int, string>();
+		private Dictionary<int, string> m_cFiles = new Dictionary<int, string>();
+		
+
 		//static variables
 		public static bool ENABLE_LOGGING = true; //if speed is a concern, set to false (will ignore all logging requests, which will save on time if there are a lot of observers)
 
@@ -59,7 +67,23 @@ namespace Engine
 			List<CodeDocument> docList = parser.parseFile(filename);
 			//m_cWorkingDocument = doc;
 			//m_cWorkingDocuments = docList;
-			foreach (CodeDocument doc in docList) { m_cWorkingDocuments.Add(doc); }
+			foreach (CodeDocument doc in docList) 
+			{ 
+				m_cWorkingDocuments.Add(doc); 
+				if (doc.CodeObjects[0].CodeType == "class")
+				{
+					// add this to dictionary TODO: how to know section? Handle before here! Should pass section index or something INTO this function
+				}
+				else if (doc.CodeObjects[0].CodeType == "interface")
+				{
+					// interface
+				}
+				else 
+				{
+					// file
+				}
+				
+			}
 			log("Engine governor has received parser's documents and stored in list of current working documents.");
 		}
 
