@@ -1,11 +1,11 @@
-﻿//********************************************************
-// File: Program.cs
-// Author: Nathan Martindale
-// Date Created: 1/23/2015
-// Date Edited: 5/27/2015
-// Copyright © 2015 Digital Warrior Labs
-// Description: DICI - Document It Console Interface. A way to run the Document It engine from the console
-//********************************************************
+﻿//*************************************************************
+//  File: Program.cs
+//  Date created: 1/23/2015
+//  Date edited: 2/28/2016
+//  Author: Nathan Martindale
+//  Copyright © 2016 Digital Warrior Labs
+//  Description: Document It Console Interface. Driver for documentation engine
+//*************************************************************
 
 using System;
 using System.Collections.Generic;

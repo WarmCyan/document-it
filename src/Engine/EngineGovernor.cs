@@ -56,9 +56,11 @@ namespace Engine
 			log("File analysis requested, starting parser...");
 			CodeParser parser = new CodeParser();
 			//CodeDocument doc = parser.parseFile(filename);
-			CodeDocument doc = (parser.parseFile(filename))[0];
-			m_cWorkingDocument = doc;
-			log("Engine governor has received parser's document and stored it as the current working document.");
+			List<CodeDocument> docList = parser.parseFile(filename);
+			//m_cWorkingDocument = doc;
+			//m_cWorkingDocuments = docList;
+			foreach (CodeDocument doc in docList) { m_cWorkingDocuments.Add(doc); }
+			log("Engine governor has received parser's documents and stored in list of current working documents.");
 		}
 
 		//creates the html API documentation (assumes m_cWorkingDocument has already been assigned)
