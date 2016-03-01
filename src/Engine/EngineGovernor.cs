@@ -54,12 +54,15 @@ namespace Engine
 			//print engine stats here (version, copyright, etc)
 		}
 
+		// properties
+		public List<string> Sections { get { return m_cSections; } set { m_cSections = value; } }
+
 		//observer functions
 		public void registerLogObserver(ILogger observer) { m_cRegisteredLogObservers.Add(observer); }
 		public void removeLogObserver(ILogger observer) { m_cRegisteredLogObservers.Remove(observer); }
 
-		//parses the comment syntax in the given file
-		public void runAnalysis(string filename)
+		//parses the comment syntax in the given file (pass in the section index it's associated with)
+		public void runAnalysis(string filename, int section)
 		{
 			log("File analysis requested, starting parser...");
 			CodeParser parser = new CodeParser();
@@ -70,18 +73,9 @@ namespace Engine
 			foreach (CodeDocument doc in docList) 
 			{ 
 				m_cWorkingDocuments.Add(doc); 
-				if (doc.CodeObjects[0].CodeType == "class")
-				{
-					// add this to dictionary TODO: how to know section? Handle before here! Should pass section index or something INTO this function
-				}
-				else if (doc.CodeObjects[0].CodeType == "interface")
-				{
-					// interface
-				}
-				else 
-				{
-					// file
-				}
+				if (doc.CodeObjects[0].CodeType == "class") { m_cClasses.Add(section, doc); } 
+				else if (doc.CodeObjects[0].CodeType == "interface") { m_cInterfaces.Add(section, doc); }
+				else { m_cFiles.Add(section, doc); } 
 				
 			}
 			log("Engine governor has received parser's documents and stored in list of current working documents.");
@@ -99,6 +93,10 @@ namespace Engine
 			log("API Documentation process complete!");
 			return returnedInfo;
 		}
+
+
+		// TODO TODO: add in section/list saving function in here
+		// TODO TODO: add in index generation function here as well, not in the program
 
 		//get the version information
 		public static string VERSION()

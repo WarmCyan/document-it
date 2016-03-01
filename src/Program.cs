@@ -31,6 +31,17 @@ namespace DICI
 		{
 			List<List<string>> indexInformation = null;
 
+			// set up the engine
+			List<ILogger> logSystem = new List<ILogger>();
+			logSystem.Add(new ConsoleLogger(0));
+			//logSystem.Add(new TextFileLogger(0));
+			//logSystem.Add(new TextFileLogger("debug.txt", 1));
+			//logSystem.Add(new TextFileLogger("errors.txt", -1, true));
+
+			EngineGovernor engine = new EngineGovernor(logSystem);
+			
+			
+
 			//running from executuable, instead of command line
 			if (args.Length == 0)
 			{
@@ -99,15 +110,6 @@ namespace DICI
 		{
 			if (headerText == "") { headerText = "@Document It!"; }
 
-			//initialize all the logging tools
-			List<ILogger> logSystem = new List<ILogger>();
-			logSystem.Add(new ConsoleLogger(0));
-			//logSystem.Add(new TextFileLogger(0));
-			//logSystem.Add(new TextFileLogger("debug.txt", 1));
-			//logSystem.Add(new TextFileLogger("errors.txt", -1, true));
-
-			//initialize and run the engine
-			EngineGovernor engine = new EngineGovernor(logSystem);
 			engine.runAnalysis(file);
 			List<string> info = engine.generateAPIDoc(resultFolder, headerText);
 			return info;
@@ -194,14 +196,23 @@ namespace DICI
 			g_sProjectFolder = destFolder;
 
 			// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+			engine.Sections = sections;
 
 			//now go through the file list and generate documentation for all of them
 			Console.WriteLine("Running documentation engine on file list...");
-			foreach (string projFile in fileList)
+			/*foreach (string projFile in fileList)
 			{
 				List<string> info = run(projFile, destFolder, headerText);
 				compiledInfo.Add(info);
+			}*/
+			//foreach (string projFile in fileList.Keys)
+			foreach (KeyValuePair<int, string> entry in fileList)
+			{
+				engine.runAnalysis(entry.Value, entry.Key);
 			}
+			
+			
+			
 			Console.WriteLine("Finished running engine!");
 
 			return compiledInfo;
