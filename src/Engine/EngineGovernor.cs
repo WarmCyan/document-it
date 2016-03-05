@@ -151,6 +151,7 @@ namespace Engine
 			writeToFile(location, "files.dat", files);
 			
 			// TODO TODO: add in index generation function here as well, not in the program
+			// TODO: also add project description/notes thing for .apiproj files
 
 			return null;
 		}

@@ -1,0 +1,111 @@
+<html>
+	<head>
+		<title>Animation</title>
+		<link rel='stylesheet' type='text/css' href='api_style.css'>
+	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+	</head>
+	<body>
+
+<div id='top_band'></div>
+<div id='logo_header_area'><h1>SquareShield 0.2.5 BETA</h1></div>
+<div id='content'>
+	<h1>Class <span class='keyword'>Animation</span></h1>
+	<p>Generic animation class that can handle linear interpolation of keyframes. It works by taking in a certain type of data, (hex-color, number, or a matrix [array of arrays]) and any number of keyframes for that data. Then, whenever the update function is called, it calculates the current set of data based on linear interpolation for the current time between surrounding keyframes. Although this comes packaged with the engine specifically for text animations, THIS CLASS CAN BE USED GENERICALLY TO LINEARLY ANIMATE ANY PROPERTY that can be defined as a hex-color, number, or matrix.</p>
+
+	<hr/>
+	<p class='tabbedText'><a href='#constructorindex'>Constructor Index</a></p>
+	<p class='tabbedText'><a href='#functionindex'>Function Index</a></p>
+	<p class='tabbedText'><a href='#propertylist'>Property List</a></p>
+	<p class='tabbedText'><a href='#constructorlist'>Constructor List</a></p>
+	<p class='tabbedText'><a href='#functionlist'>Function List</a></p>
+	<hr/>
+
+	<a name='constructorindex'></a>
+	<h2>Constructor Index</h2>
+	<p>Click on any of the following constructor names to see more detail about them below.</p>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td><code><a href='#constructor0'>Animation</a>(type, userType)</code></td>
+		</tr>
+	</table>
+
+	<a name='functionindex'></a>
+	<h2>Function Index</h2>
+	<p>Click on any of the following function names to see more detail about them below.</p>
+	<table class='dataTable'>
+		<tr><th>Modifier/Return Type</th><th>Function Name</th></tr>
+		<tr class='row1'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function0'>addKeyFrame</a>(keyFrameData, time)</code></td>
+		</tr>
+		<tr class='row2'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function1'>updateAnimation</a>(dt)</code></td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='propertylist'></a>
+	<h3>Property List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> currentTime</code> - The amount of time (in milliseconds) that has transpired in the animation. (Assuming passed in dt's are accurate.) Keyframe time intervals are compared to this variable, so this variable can be used to control where in an animation's timeline you are.</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> done</code> - Variable representing whether the animation has completed or not (if currentTime has passed the last keyframe's time. This variable is primarily meant for checking animations for removal.</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> userType</code> - User-defined informational variable meant for when an extra piece of information is needed by the class handling the animation, if it needs further specification as to what property to apply the returned animation value to.</td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='constructorlist'></a>
+	<h3>Constructor List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td>
+				<a name='constructor0'></a><code class='biggerCode'>Animation(type, userType)</code></br></br>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> type</code><span class='descriptionText'> - Type of data that will be input. (Pass in a string, it will currently take "color", "number", or "matrix")</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> userType</code><span class='descriptionText'> - This is meant purely to be a user-defined variable. You can pass in any string, it's intended for the user if an extra piece of information is needed so that whatever class handles animation will know to which property it needs to apply the returned values from this class.</span></p>
+			</td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='functionlist'></a>
+	<h3>Function List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td>
+				<a name='function0'></a><span class='function_title'>addKeyFrame</span></br><code class='biggerCode'><span class='keyword'></span> addKeyFrame(keyFrameData, time)</code></br></br>
+				<p>Adds the desired keyframe data and time to the animation's arrays.</p>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> keyFrameData</code><span class='descriptionText'> - The data/value(s) you want to be applied to the property. NOTE: The type of this data MUST match the data type passed in when you initially create the Animation object</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> time</code><span class='descriptionText'> - The time in milliseconds at which you want the specified data/value(s) to be applied in the animation. NOTE: this is a "global animation" time, it represents the time from the START of the animation, NOT the last keyframe.</span></p>
+			</td>
+		</tr>
+		<tr class='row2'>
+			<td>
+				<a name='function1'></a><span class='function_title'>updateAnimation</span></br><code class='biggerCode'><span class='keyword'></span> updateAnimation(dt)</code></br></br>
+				<p>Calculates the data/value(s) of the animation for the current time through linear interpolation of the surrounding keyframes. Note that once the time for the final keyframe is passed by the currentTime variable, the done variable will be set to true.</p>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> dt</code><span class='descriptionText'> - Change in time, or amount of time in milliseconds since the last time this function was called. NOTE that this means the animation is TIME BASED, not frame based. (Meaning animations will run at the exact same speed no matter the frame rate.)</span></p>
+				<p><b>Output</b></p>
+				<p class='tabbedText'>This function returns the data/value(s) for the current point in time of the animation. NOTE: For "color" type animations, it returns the hex code WITHOUT a starting hash "#".</p>
+			</td>
+		</tr>
+	</table>
+	</div>
+	<div id='bottom_band'>
+		<div id='footer_center'><p><i>Generated by Document It engine 1.0.166.2</i></br>Copyright © 2015 Digital Warrior Labs</p>
+	</div>
+</body>
+</html>

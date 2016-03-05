@@ -1,0 +1,260 @@
+/*************************************************
+	File: api_style.css
+	Author: Nathan Martindale
+	Date created: 1/19/2015
+	Date edited: 5/20/2015
+	Copyright © 2015 Digital Warrior Labs
+	
+	Style version: 1.1
+*************************************************/
+
+/* Nice, safe, editale stuff is up here. Feel free to mess around with these values
+to personalize your documentation! */
+
+/* -- COLORS -- */
+
+body { background-color: #CDEDD9; } 
+a { color: #338855; } 
+h3 { color: #FFFFFF; background-color: #BB3344; }
+
+.keyword { color: #0E4EAD; }
+.descriptionText { color: #BB3344; } /* This only applies to descriptions of input variables. */
+
+.biggerCode { background-color: rgba(0, 0, 0, .20); }
+
+.row1 { background-color: #FBFEFB; } /* For banded rows. Color of odd-numbered rows. */
+.row2 { background-color: #E1F4E5; } /* For banded rows. Color of even-numbered rows. */
+
+.dataTable { background-color: #FFFFFF; } /* This ONLY affects the header row of the function index table. */
+
+#top_band { background-color: #338855; } /* The small colored banner that runs accross the top. */
+#logo_header_area { color: #FFFFFF; } /* Color of the header text inside top_band. */
+#content { background-color: #FFFFFF; }
+#bottom_band_container { background-color: #555555; } /* Footer, colored band at the bottom of the page. */
+#footer_center { color: #AAAAAA; }
+
+
+/* -- FONTS -- */
+
+body { font-family: Arial; }
+
+
+/* -- BORDERS -- */
+
+hr { border: 3px solid #000000; }
+.dataTable, .dataTable td { border: 1px solid #B3B3B3; }
+#content
+{
+	border-left: 1px solid #AAAAAA;
+	border-right: 2px solid #777777;
+}
+
+
+/* -- MISC SAFE EDITING -- */
+
+p { font-size: 10pt; }
+a { font-weight: bold; }
+.biggerCode { font-size: 12pt; }
+.mediumCode { font-size: 12pt; }
+.function_title { font-weight: bold; font-size: 12pt; }
+.tabbedText { padding-left: 5em; }
+.keyword { font-weight: bold; }
+
+
+/* ------------------------------ END SAFE EDITING SECTION. ------------------------------ */
+/* ----------------------------------------------------------------------------------------*/
+/* Everything below this line is being marked NOT safe for editing for a reason! Don't touch
+anything below this unless you're a very brave soul who knows exactly what they're doing! */
+
+
+body { margin-bottom: -20px; }
+
+h3
+{
+	width: 100%;
+	padding: 10px;
+	margin: -10px;
+	margin-bottom: 0px;
+}
+
+.dataTable { width: 100%; }
+
+.dataTable, .dataTable td
+{
+	border-collapse: collapse;
+	padding: 10px;
+	font-size: 10pt;
+}
+
+.biggerCode
+{
+	padding: 10px;
+	margin-left: -10px;
+}
+
+.function_title
+{
+	margin-bottom: 5px;
+	display: block;
+}
+
+.return_modifier_box { width: 30%; }
+
+#content
+{
+	z-index: 2;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 50px;
+	/*width: 90%;*/
+	padding: 10px;
+
+
+	margin-left: 300px;
+}
+
+#logo_header_area
+{
+	position: fixed;
+	top: -15px;
+	z-index: 11;
+}
+
+#top_band
+{
+	width: 100%;
+	/*position: absolute;*/
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 50px;
+	z-index: 10;
+}
+
+#bottom_band_container
+{
+	bottom: -10px;
+	left: 0;
+	/*left: 300px;*/
+	
+	right: 0;
+	height: 50px;
+	display: block;
+	margin: 0px;
+	
+	width: 100%;
+	
+	padding: 10px;
+	padding-top: 2px;
+	margin-left: -12px;
+	/*margin-left: 300px;*/
+}
+
+#bottom_band
+{
+	margin-left: 300px;
+}
+
+#footer_center
+{
+	text-align: center;
+}
+
+
+
+
+
+#side_bar
+{
+	position: fixed;
+	background-color: #ff00FF;
+	height: 100%;
+	/*width: 100%;*/
+	left: 0;
+	/*top: 50px;*/
+	width: 300px;
+	margin: 0;
+	padding: 0;
+	/*z-index: -1;*/
+
+	color: #FFFFFF;
+
+	display: inline-block;
+}
+
+#side_sections
+{
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	height: 250px;
+	height: 30%;
+	background-color: #6666AA;
+	padding: 0;
+	margin: 0;
+	padding-top: 1px; /* DON'T TAKE THIS OUT.....CSS IS STUPID*/
+	/*top: -5px;*/
+	
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+#side_sections p, #side_section_contents p
+{
+	/*margin: 5px;*/
+	margin: 0px;
+	padding: 0;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	/*margin-left: 30px;*/
+}
+
+#side_sections a, #side_section_contents a
+{
+	margin: 5px;
+	margin-left: 30px;
+	color: #FFFFFF;
+	font-weight: normal;
+	font-size: 12pt;
+	text-decoration: none;
+	width: 100%;
+	display: block;
+	cursor: default;
+}
+#side_sections p:hover, #side_section_contents p:hover
+{
+	background-color: #000000;
+}
+
+#side_section_contents
+{
+	position: relative;
+	display: inline-block;
+	background-color: #444488;
+	/*top: 250px;
+	top: 30%;*/
+	width: 100%;
+	height: 65%;
+	padding: 0;
+	margin: 0;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+#side_section_contents_container
+{
+	/*position: absolute;
+	overflow: auto;*/
+	width: 100%;
+	height: 110%;
+}
+#side_bar ::-webkit-scrollbar { 
+    display: none; 
+}
+
+.sectionLabel
+{
+	margin: 15px !important;
+	margin-left: 10px !important;
+	font-size: 14pt;
+	font-weight: bold;
+}

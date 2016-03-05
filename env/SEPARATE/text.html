@@ -1,0 +1,204 @@
+<html>
+	<head>
+		<title>Text</title>
+		<link rel='stylesheet' type='text/css' href='api_style.css'>
+	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+	</head>
+	<body>
+
+<div id='top_band'></div>
+<div id='logo_header_area'><h1>SquareShield 0.2.5 BETA</h1></div>
+<div id='content'>
+	<h1>Class <span class='keyword'>Text</span></h1>
+	<p>This class is a collection of <a href='textchar.html'>TextChar</a> objects and rendering properties. It can be thought of as representing a string, when you want text to be rendered in your canvas, most of the information needs to go into an instance of this class. (NOTE: This engine requires a global "alphabet" array that contains symbols for any characters you want the ability to render.) Keep in mind that fonts are displayed by rendering out small blocks in the shapes of letters (based on matricies that you define.)</p>
+
+	<hr/>
+	<p class='tabbedText'><a href='#constructorindex'>Constructor Index</a></p>
+	<p class='tabbedText'><a href='#functionindex'>Function Index</a></p>
+	<p class='tabbedText'><a href='#constantlist'>Constant List</a></p>
+	<p class='tabbedText'><a href='#propertylist'>Property List</a></p>
+	<p class='tabbedText'><a href='#constructorlist'>Constructor List</a></p>
+	<p class='tabbedText'><a href='#functionlist'>Function List</a></p>
+	<hr/>
+
+	<a name='constructorindex'></a>
+	<h2>Constructor Index</h2>
+	<p>Click on any of the following constructor names to see more detail about them below.</p>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td><code><a href='#constructor0'>Text</a>(canvasContainer, blockSizeArray, letterSpacing, useRelPos)</code></td>
+		</tr>
+	</table>
+
+	<a name='functionindex'></a>
+	<h2>Function Index</h2>
+	<p>Click on any of the following function names to see more detail about them below.</p>
+	<table class='dataTable'>
+		<tr><th>Modifier/Return Type</th><th>Function Name</th></tr>
+		<tr class='row1'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function0'>calculateTextChars</a>()</code></td>
+		</tr>
+		<tr class='row2'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function1'>getTextString</a>()</code></td>
+		</tr>
+		<tr class='row1'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function2'>renderFont</a>(dt)</code></td>
+		</tr>
+		<tr class='row2'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function3'>setRelativePositions</a>(startX, endX, startY, endY)</code></td>
+		</tr>
+		<tr class='row1'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function4'>setTextString</a>(text)</code></td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='constantlist'></a>
+	<h3>Constant List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> CHAR_MATRIX_HEIGHT</code> - The height of every character matrix. NOTE that this needs to be the same for EVERY character in your alphabet. When designing custom fonts, keep this in mind. The width of each matrix can be variable, but height MUST be consistent.</td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='propertylist'></a>
+	<h3>Property List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> absPosEndX</code> - Absolute pixel position of right text boundary. NOTE: When useRelPos is set to TRUE, all passed relative fractional positions are calculated and the results are stored in the absolute positioning variables. Any manually set absolute positions WILL NOT AFFECT the text while useRelPos is true. (Also note that if the rendered text surpasses this limit, it will be wrapped into multiple lines until it fits x-wise.)</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> absPosEndY</code> - Absolute pixel position of bottom text boundary. NOTE: When useRelPos is set to TRUE, all passed relative fractional positions are calculated and the results are stored in the absolute positioning variables. Any manually set absolute positions WILL NOT AFFECT the text while useRelPos is true. (Also note that the text is not required to fit within this limit, and if wrapped enough, it can pass the boundary.)</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> absPosStartX</code> - Absolute pixel position of left text boundary. NOTE: When useRelPos is set to TRUE, all passed relative fractional positions are calculated and the results are stored in the absolute positioning variables. Any manually set absolute positions WILL NOT AFFECT the text while useRelPos is true.</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> absPosStartY</code> - Absolute pixel position of top text boundary. NOTE: When useRelPos is set to TRUE, all passed relative fractional positions are calculated and the results are stored in the absolute positioning variables. Any manually set absolute positions WILL NOT AFFECT the text while useRelPos is true.</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> alignX</code> - Horizontal alignment of the text within given limits. Set as either "left", "center", or "right". Default is "left".</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> alignY</code> - Vertical alignment of the text within given limits. Set as either "top", "center", or "bottom". Default is "top".</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> blockMargin</code> - The margin in pixels given to each rendered block. (Pads the blocks so there's space between them.) Default is 0.</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> blockSize[]</code> - Array holding the size specifications for each rendered block. [0] = width [1] = height</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> chars[]</code> - The list of <a href='textchar.html'>TextChar</a> objects. Using this array, you can manually affect settings of individual characters in the string, such as animations, colors, etc.</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> container</code> - the canvas object the text is rendered onto.</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> letterSpacing</code> - The space (in pixels) put between each rendered letter.</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> lineSpacing</code> - The space (in pixels) put between each line of text. (Only taken into account when multiple lines required.) Default is 0.</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> relPosEndX[]</code> - Relative fractional positioning array for right text boundary. ([0] = numerator, [1] = denominator) Fractional positioning works by taking the amount of world space (based on the canvas container), dividing by the denominator, and multiplying by the numerator. In other words, [1,2] would mean that the right limit of the text would be exactly in the center of the canvas. (Use [1,1] if you want to end at the extreme right edge.) NOTE: If the rendered text surpasses this limit, it will be wrapped into multiple lines until it fits x-wise.</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> relPosEndY[]</code> - Relative fractional positioning array for bottom text boundary. ([0] = numerator, [1] = denominator) Fractional positioning works by taking the amount of world space (based on the canvas container), dividing by the denominator, and multiplying by the numerator. In other words, [1,2] would mean that the bottom limit of the text would be exactly in the middle of the canvas. (Use [1,1] if you want to end at the extreme bottom edge.) NOTE: If text is wrapped into multiple lines, it may surpass this limit.</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> relPosStartX[]</code> - Relative fractional positioning array for left text boundary. ([0] = numerator, [1] = denominator) Fractional positioning works by taking the amount of world space (based on the canvas container), dividing by the denominator, and multiplying by the numerator. In other words, [1,2] would mean that the left limit of the text would be exactly in the center of the canvas. (Use [0,1] if you want to start at the extreme left edge.)</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> relPosStartY[]</code> - Relative fractional positioning array for upper text boundary. ([0] = numerator, [1] = denominator) Fractional positioning works by taking the amount of world space (based on the canvas container), dividing by the denominator, and multiplying by the numerator. In other words, [1,2] would mean that the upper limit of the text would be exactly in the middle of the canvas. (Use [0,1] if you want to start at the extreme top edge.)</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> textMargin[]</code> - Array representing the amount of space (in pixels) given on each side of the entire text object. [0] = x-margin [1] = y-margin. Default is [0,0].</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> useRelPos</code> - Boolean representing whether to use relative fractional positioning (true) or absolute pixel postitioning (false.)</td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='constructorlist'></a>
+	<h3>Constructor List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td>
+				<a name='constructor0'></a><code class='biggerCode'>Text(canvasContainer, blockSizeArray, letterSpacing, useRelPos)</code></br></br>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> canvasContainer</code><span class='descriptionText'> - The canvas object that you're rendering to. This is used for calculating relative positions, as well as for getting rendering context.</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> blockSizeArray</code><span class='descriptionText'> - Every block that is rendered in a character has a height and width. You can pass in both simultaneously in an array here. ([0] = width, [1] = height.) Each dimension is in pixels.</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> letterSpacing</code><span class='descriptionText'> - The space (in pixels) between each character in the string.</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> useRelPos</code><span class='descriptionText'> - Boolean value representing whether relative fractional positions or absolute pixel positions should be used. (True for relative, false for absolute.)</span></p>
+			</td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='functionlist'></a>
+	<h3>Function List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td>
+				<a name='function0'></a><span class='function_title'>calculateTextChars</span></br><code class='biggerCode'><span class='keyword'></span> calculateTextChars()</code></br></br>
+				<p>Calculates all necessary positions, widths, etc, and creates <a href='textchar.html'>TextChar</a> instances accordingly. This should only ever be called manually if you manually adjust a property without changing the text string.</p>
+			</td>
+		</tr>
+		<tr class='row2'>
+			<td>
+				<a name='function1'></a><span class='function_title'>getTextString</span></br><code class='biggerCode'><span class='keyword'></span> getTextString()</code></br></br>
+				<p>returns what string the text is currently rendering</p>
+				<p><b>Output</b></p>
+				<p class='tabbedText'>returns what string the text is currently rendering</p>
+			</td>
+		</tr>
+		<tr class='row1'>
+			<td>
+				<a name='function2'></a><span class='function_title'>renderFont</span></br><code class='biggerCode'><span class='keyword'></span> renderFont(dt)</code></br></br>
+				<p>Call this function to actually have the engine render out all of the characters.</p>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> dt</code><span class='descriptionText'> - Change in time, or amount of time in milliseconds since the last time this function was called.Note that this is only necessary to pass through to individual character animations. If you aren't using any animations, it doesn't matter what you pass in here.</span></p>
+			</td>
+		</tr>
+		<tr class='row2'>
+			<td>
+				<a name='function3'></a><span class='function_title'>setRelativePositions</span></br><code class='biggerCode'><span class='keyword'></span> setRelativePositions(startX, endX, startY, endY)</code></br></br>
+				<p>A fast way to quickly set all relative fractional positions.</p>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> startX</code><span class='descriptionText'> - Fractional left boundary array ([0] = numerator, [1] = denominator.)</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> endX</code><span class='descriptionText'> - Fractional right boundary array ([0] = numerator, [1] = denominator.)</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> startY</code><span class='descriptionText'> - Fractional top boundary array ([0] = numerator, [1] = denominator.)</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> endY</code><span class='descriptionText'> - Fractional bottom boundary array ([0] = numerator, [1] = denominator.)</span></p>
+			</td>
+		</tr>
+		<tr class='row1'>
+			<td>
+				<a name='function4'></a><span class='function_title'>setTextString</span></br><code class='biggerCode'><span class='keyword'></span> setTextString(text)</code></br></br>
+				<p>Change the string that the text should render. NOTE: This function calls calculateTextChars(), so you do not need to manually call that function every time you change the text.</p>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> text</code><span class='descriptionText'> - The new text for the string.</span></p>
+			</td>
+		</tr>
+	</table>
+	</div>
+	<div id='bottom_band'>
+		<div id='footer_center'><p><i>Generated by Document It engine 1.0.166.2</i></br>Copyright © 2015 Digital Warrior Labs</p>
+	</div>
+</body>
+</html>

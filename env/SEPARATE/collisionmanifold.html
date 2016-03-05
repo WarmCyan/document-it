@@ -1,0 +1,103 @@
+<html>
+	<head>
+		<title>CollisionManifold</title>
+		<link rel='stylesheet' type='text/css' href='api_style.css'>
+	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+	</head>
+	<body>
+
+<div id='top_band'></div>
+<div id='logo_header_area'><h1>SquareShield 0.2.5 BETA</h1></div>
+<div id='content'>
+	<h1>Class <span class='keyword'>CollisionManifold</span></h1>
+	<p>This is a class that stores and computes information about a collision between two objects. Every time the <a href='physicsengine.html'>PhysicsEngine</a> detects a collision, it creates an instance of this class and stores it in an array of collisions. When it resolves collisions, it goes through that list and uses the information stored in these instances.</p>
+
+	<hr/>
+	<p class='tabbedText'><a href='#constructorindex'>Constructor Index</a></p>
+	<p class='tabbedText'><a href='#functionindex'>Function Index</a></p>
+	<p class='tabbedText'><a href='#propertylist'>Property List</a></p>
+	<p class='tabbedText'><a href='#constructorlist'>Constructor List</a></p>
+	<p class='tabbedText'><a href='#functionlist'>Function List</a></p>
+	<hr/>
+
+	<a name='constructorindex'></a>
+	<h2>Constructor Index</h2>
+	<p>Click on any of the following constructor names to see more detail about them below.</p>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td><code><a href='#constructor0'>CollisionManifold</a>(obj1, obj2)</code></td>
+		</tr>
+	</table>
+
+	<a name='functionindex'></a>
+	<h2>Function Index</h2>
+	<p>Click on any of the following function names to see more detail about them below.</p>
+	<table class='dataTable'>
+		<tr><th>Modifier/Return Type</th><th>Function Name</th></tr>
+		<tr class='row1'>
+			<td class='return_modifier_box'><code><span class='keyword'></span></code></td>
+			<td><code><a href='#function0'>generateBoxBoxManifold</a>()</code></td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='propertylist'></a>
+	<h3>Property List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> A</code> - The <a href='physics.html'>physics</a> instance of the first object.</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> B</code> - The <a href='physics.html'>physics</a> instance of the second object.</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> normal[]</code> - The <b>unit</b> normal vector that points from obj1 (objA) to obj2 (objB). Note that this is an array, where [0] represents X and [1] represents Y. (Since this is a UNIT vector, the magnitude should always be 1.)</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> objA</code> - The parent object of <a href='physics.html'>physics</a> A. (direct copy of obj1 from constructor)</td>
+		</tr>
+		<tr class='row1'>
+			<td><code class='biggerCode'><span class='keyword'></span> objB</code> - The parent object of <a href='physics.html'>physics</a> B. (direct copy of obj2 from constructor)</td>
+		</tr>
+		<tr class='row2'>
+			<td><code class='biggerCode'><span class='keyword'></span> penetration</code> - The overlay of one object on another or 'depth of penetration' along the axis of LEAST penetration.</td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='constructorlist'></a>
+	<h3>Constructor List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td>
+				<a name='constructor0'></a><code class='biggerCode'>CollisionManifold(obj1, obj2)</code></br></br>
+<p><b>Input Parameters</b></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> obj1</code><span class='descriptionText'> - First object involved in collision. (NOTE: This can be any class or object, but it MUST CONTAIN A PHYSICS INSTANCE named 'physics'.) This variable is stored directly into objA, and its physics instance is stored in A.</span></p>
+	<p class='tabbedText'><code class='mediumCode'><span class='keyword'></span> obj2</code><span class='descriptionText'> - Second object involved in collision. (NOTE: This can be any class or object, but it MUST CONTAIN A PHYSICS INSTANCE named 'physics'.) This variable is stored directly into objB and its physics instance is stored in B.</span></p>
+			</td>
+		</tr>
+	</table>
+
+</br>
+<hr/>
+
+	<a name='functionlist'></a>
+	<h3>Function List</h3>
+	<table class='dataTable'>
+		<tr class='row1'>
+			<td>
+				<a name='function0'></a><span class='function_title'>generateBoxBoxManifold</span></br><code class='biggerCode'><span class='keyword'></span> generateBoxBoxManifold()</code></br></br>
+				<p>This function carries out all computations to calculate the normal vector and penetration amount. (Specifically between two box objects. While currently boxes are the only thing the engine can handle, this may be expanded in the future, and each type of collision will require its own manifold generation function.) NOTE: Since there is no rotational logic anywhere in the engine, the normal calculated by this function should just be one of object A's face normals.</p>
+			</td>
+		</tr>
+	</table>
+	</div>
+	<div id='bottom_band'>
+		<div id='footer_center'><p><i>Generated by Document It engine 1.0.166.2</i></br>Copyright © 2015 Digital Warrior Labs</p>
+	</div>
+</body>
+</html>
