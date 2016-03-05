@@ -74,7 +74,7 @@ namespace DICI
 					//check to see if the file is a .apiproj
 					if (l_file.EndsWith(".apiproj")) 
 					{ 
-						indexInformation = runProject(l_file);
+						indexInformation = runProject(l_file, null); // TODO: TAKE OUT ENTIRE SINGLE FILE THING AT SOME POINT
 						if (indexInformation != null) { createIndex(indexInformation); }
 						continue; 
 					}
@@ -87,7 +87,7 @@ namespace DICI
 					Console.Write("\n\nEnter the header text you would like to appear in the upper left-hand corner of the document. (This can be used for project names, company names, etc.) If you don't care what it says, just hit enter, and the default program name will be substituted.\nHeader text: ");
 					l_headerText = Console.ReadLine();
 
-					run(l_file, l_resultFolder, l_headerText);
+					//run(l_file, l_resultFolder, l_headerText);
 				}
 
 				//Console.WriteLine("Press any key to continue...");
@@ -99,25 +99,25 @@ namespace DICI
 				string projectFile = args[0];
 				if (!projectFile.EndsWith(".apiproj")) { Console.WriteLine("If running this program with command line arguments, you MUST supply an .apiproj file as the first argument."); }
 
-				indexInformation = runProject(projectFile);
+				indexInformation = runProject(projectFile, engine);
 				createIndex(indexInformation);
 			}
 			
 		}
 
 		//run the engine governor with the passed data (returns result information)
-		static List<string> run(string file, string resultFolder, string headerText)
+		/*static List<string> run(string file, string resultFolder, string headerText)
 		{
 			if (headerText == "") { headerText = "@Document It!"; }
 
 			engine.runAnalysis(file);
 			List<string> info = engine.generateAPIDoc(resultFolder, headerText);
 			return info;
-		}
+		}*/
 
 		//function that takes care of reading the special .apiproj files 
 		//returns list of all information from files created
-		static List<List<string>> runProject(string file)
+		static List<List<string>> runProject(string file, EngineGovernor engine)
 		{
 			List<List<string>> compiledInfo = new List<List<string>>();
 
@@ -126,7 +126,9 @@ namespace DICI
 			
 			int currentSectionID = -1;
 			List<string> sections = new List<string>();
-			Dictionary<int, string> fileList = new Dictionary<string, string>();  // int is index of section
+			//Dictionary<int, string> fileList = new Dictionary<int, string>();  // int is index of section
+			List<string> fileList = new List<string>();
+			List<int> fileListAssoc = new List<int>();
 			
 			string headerText = "";
 			string destFolder = "";
@@ -169,7 +171,8 @@ namespace DICI
 				{
 					string sectionName = fileLines[i].Substring(fileLines[i].IndexOf(" ")); // TODO: error checking!
 					sections.Add(sectionName);
-					currentSectionID = sections.Length - 1;
+					currentSectionID = sections.Count - 1;
+					continue;
 				}
 
 				//first check for properties
@@ -186,8 +189,9 @@ namespace DICI
 				{
 					// first check to see if no sections involved
 					if (currentSectionID == -1) { sections.Add("All"); currentSectionID = 0; }
-					//fileList.Add(fileLines[i]);
-					fileList.Add(currentSectionID, fileLines[i]);
+					fileList.Add(fileLines[i]);
+					fileListAssoc.Add(currentSectionID);
+					//fileList.Add(currentSectionID, fileLines[i]);
 				}
 			}
 			Console.WriteLine("Analyzed successfully!");
@@ -206,11 +210,15 @@ namespace DICI
 				compiledInfo.Add(info);
 			}*/
 			//foreach (string projFile in fileList.Keys)
-			foreach (KeyValuePair<int, string> entry in fileList)
+			/*foreach (KeyValuePair<int, string> entry in fileList)
 			{
 				engine.runAnalysis(entry.Value, entry.Key);
+			}*/
+			for (int i = 0; i < fileList.Count; i++)
+			{
+				engine.runAnalysis(fileList[i], fileListAssoc[i]);
 			}
-			
+			engine.generateAPIDoc(destFolder, headerText);
 			
 			
 			Console.WriteLine("Finished running engine!");

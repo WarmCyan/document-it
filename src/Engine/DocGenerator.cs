@@ -171,7 +171,7 @@ namespace Engine
 		}
 
 		//returns a version of the link text WITHOUT punctuation, and lowercase, etc. etc....
-		private string makeSafeLink(string originalLink)
+		public string makeSafeLink(string originalLink)
 		{
 			//EngineGovernor.log("DEBUG - : Trying to make '" + originalLink + "' a safe link", 1);
 			string link = originalLink.ToLower();

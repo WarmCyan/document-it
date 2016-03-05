@@ -38,10 +38,17 @@ namespace Engine
 		private List<string> m_cSections = new List<string>();
 
 		// in each of the dictionaries, the int represents index of section in m_cSections above that its associated with (for output javascript file)
-		private Dictionary<int, string> m_cClasses = new Dictionary<int, string>();
+		/*private Dictionary<int, string> m_cClasses = new Dictionary<int, string>();
 		private Dictionary<int, string> m_cInterfaces = new Dictionary<int, string>();
-		private Dictionary<int, string> m_cFiles = new Dictionary<int, string>();
+		private Dictionary<int, string> m_cFiles = new Dictionary<int, string>();*/
+
+		private List<string> m_cClasses = new List<string>();
+		private List<string> m_cInterfaces = new List<string>();
+		private List<string> m_cFiles = new List<string>();
 		
+		private List<int> m_cClassesAssoc = new List<int>();
+		private List<int> m_cInterfacesAssoc = new List<int>();
+		private List<int> m_cFilesAssoc = new List<int>();
 
 		//static variables
 		public static bool ENABLE_LOGGING = true; //if speed is a concern, set to false (will ignore all logging requests, which will save on time if there are a lot of observers)
@@ -73,9 +80,24 @@ namespace Engine
 			foreach (CodeDocument doc in docList) 
 			{ 
 				m_cWorkingDocuments.Add(doc); 
-				if (doc.CodeObjects[0].CodeType == "class") { m_cClasses.Add(section, doc); } 
-				else if (doc.CodeObjects[0].CodeType == "interface") { m_cInterfaces.Add(section, doc); }
-				else { m_cFiles.Add(section, doc); } 
+				if (doc.CodeObjects[0].CodeType == "class") 
+				{ 
+					//m_cClasses.Add(section, doc.CodeObjects[0].Name); 
+					m_cClasses.Add(doc.CodeObjects[0].Name); 
+					m_cClassesAssoc.Add(section);
+				} 
+				else if (doc.CodeObjects[0].CodeType == "interface") 
+				{ 
+					//m_cInterfaces.Add(section, doc.CodeObjects[0].Name); 
+					m_cInterfaces.Add(doc.CodeObjects[0].Name); 
+					m_cInterfacesAssoc.Add(section);
+				}
+				else 
+				{ 
+					//m_cFiles.Add(section, doc.CodeObjects[0].Name); 
+					m_cFiles.Add(doc.CodeObjects[0].Name); 
+					m_cFilesAssoc.Add(section);
+				} 
 				
 			}
 			log("Engine governor has received parser's documents and stored in list of current working documents.");
@@ -83,20 +105,68 @@ namespace Engine
 
 		//creates the html API documentation (assumes m_cWorkingDocument has already been assigned)
 		//Returns 3 strings, filename, and class(or interface name), and description
+		// NEW: generates ALL api documentation of ALL code that has been analyzed up until this point!
 		public List<string> generateAPIDoc(string location, string topHeaderText)
 		{
-			if (m_cWorkingDocument == null) { log("ERROR - Working Document has not been set. You must analyze a code file before generating API documentation for it.", -1); return null; }
+			/*if (m_cWorkingDocument == null) { log("ERROR - Working Document has not been set. You must analyze a code file before generating API documentation for it.", -1); return null; }
 			log("Preparing to create API documentation off of current working document...");
 			DocGenerator generator = new DocGenerator(m_cWorkingDocument);
 			generator.TopHeaderText = topHeaderText;
 			List<string> returnedInfo = generator.createHTMLDocument(location);
 			log("API Documentation process complete!");
-			return returnedInfo;
+			return returnedInfo;*/
+
+			foreach (CodeDocument doc in m_cWorkingDocuments)
+			{
+				log("Preparing to create API documentation off of current working documents...");
+				DocGenerator generator = new DocGenerator(doc);
+				generator.TopHeaderText = topHeaderText;
+				generator.createHTMLDocument(location);
+			}
+			
+			// TODO TODO: add in section/list saving function in here
+			
+			// write sections
+			string sections = "";
+			foreach (string sec in m_cSections) { sections += sec + "\n"; }
+			writeToFile(location, "sections.dat", sections);
+			
+			// write classes
+			string classes = "";
+			//foreach (KeyValuePair<int, string> classEntry in m_cClasses) { classes += classEntry.Value + "," + classEntry.Key + "\n"; }
+			for (int i = 0; i < m_cClasses.Count; i++) { classes += m_cClasses[i] + "," + m_cClassesAssoc[i] + "\n"; }
+			writeToFile(location, "classes.dat", classes);
+
+			// write interfaces
+			string interfaces = "";
+			//foreach (KeyValuePair<int, string> interfaceEntry in m_cInterfaces) { interfaces += interfaceEntry.Value + "," + interfaceEntry.Key + "\n"; }
+			for (int i = 0; i < m_cInterfaces.Count; i++) { interfaces += m_cInterfaces[i] + "," + m_cInterfacesAssoc[i] + "\n"; }
+			writeToFile(location, "interfaces.dat", interfaces);
+			
+			
+			// write "files"
+			string files = "";
+			//foreach (KeyValuePair<int, string> fileEntry in m_cFiles) { interfaces += fileEntry.Value + "," + fileEntry.Key + "\n"; }
+			for (int i = 0; i < m_cFiles.Count; i++) { files += m_cFiles[i] + "," + m_cFilesAssoc[i] + "\n"; }
+			writeToFile(location, "files.dat", files);
+			
+			// TODO TODO: add in index generation function here as well, not in the program
+
+			return null;
 		}
 
+		private bool writeToFile(string location, string fileName, string content)
+		{
+			StreamWriter fileStream = null;
+			try { fileStream = new StreamWriter(location + "/" + fileName, true); }
+			catch (IOException e) { return false; } 
 
-		// TODO TODO: add in section/list saving function in here
-		// TODO TODO: add in index generation function here as well, not in the program
+			fileStream.WriteLine(content); 
+			fileStream.Close();
+
+			return true;
+		}
+
 
 		//get the version information
 		public static string VERSION()
