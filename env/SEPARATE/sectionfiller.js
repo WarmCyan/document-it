@@ -13,6 +13,7 @@ var fileList = [];
 var sectionList = [];
 
 var selectedSectionIndex = 0;
+//var selectedEntityIndex = 0; 
 
 function main()
 {
@@ -82,6 +83,13 @@ function checkSectionExistence()
 	}
 }
 
+function setSection(sectionID)
+{
+	selectedSectionIndex = sectionID;
+	refreshSidebarSections();
+	refreshSidebarSectionContents();
+}
+
 function refreshSidebarSectionContents()
 {
 	clearSidebarSectionContents();
@@ -106,7 +114,20 @@ function printOutSections()
 	obj.innerHTML += "<h4 class='sectionLabel'>Sections</h4>";
 	for (var i = 0; i < sectionList.length; i++)
 	{
-		obj.innerHTML += "<div><p>" + sectionList[i][0] + "</p></div>";
+		var innerString = "<div onclick='setSection(" + i + ");'";
+		if (i == selectedSectionIndex) { innerString += " class='sectionSelected'"; }
+		innerString += "><p>" + sectionList[i][0] + "</p></div>";
+		obj.innerHTML += innerString;
+		
+		/*obj.innerHTML += "<div onclick='setSection(" + i + ");'";
+		if (i == selectedSectionIndex) { obj.innerHTML += " class='sectionSelected'"; }
+		obj.innerHTML +="><p>" + sectionList[i][0] + "</p></div>";*/
+		
+		
+		
+		
+		/*if (i == selectedSectionIndex) { obj.innerHTML += "<div class='sectionSelected'><p>" + sectionList[i][0] + "</p></div>"; }
+		else { obj.innerHTML += "<div><p>" + sectionList[i][0] + "</p></div>"; }*/
 	}
 }
 
@@ -165,9 +186,11 @@ function toggleCollapseSidebar()
 }
 
 
+// -- EVENTS --
+
 function sidebarClick()
 {
 	if (doubleClickReady) { toggleCollapseSidebar(); }
 	doubleClickReady = true;
-	setTimeout(function() { doubleClickReady = false; }, 1000);
+	setTimeout(function() { doubleClickReady = false; }, 500);
 }

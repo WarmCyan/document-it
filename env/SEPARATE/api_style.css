@@ -259,3 +259,8 @@ h3
 	font-size: 14pt;
 	font-weight: bold;
 }
+
+.sectionSelected
+{
+	background-color: #ff0000;
+}
