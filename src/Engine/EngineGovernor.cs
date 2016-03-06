@@ -127,28 +127,59 @@ namespace Engine
 			// TODO TODO: add in section/list saving function in here
 			
 			// write sections
-			string sections = "";
-			foreach (string sec in m_cSections) { sections += sec + "\n"; }
-			writeToFile(location, "sections.dat", sections);
+			/*string sections = "";
+			foreach (string sec in m_cSections) { sections += sec + "\n"; }*/
+
+			string sectionsJS = "var SECTION_LIST = [";
+			for (int i = 0; i < m_cSections.Count; i++)
+			{
+				sectionsJS += "'" + m_cSections[i] + "," + m_cSections[i] + "'";
+				if (i < m_cSections.Count - 1) { sectionsJS += ","; }
+			}
+			sectionsJS += "];";
+			writeToFile(location, "sections.js", sectionsJS);
 			
 			// write classes
-			string classes = "";
+			/*string classes = "";
 			//foreach (KeyValuePair<int, string> classEntry in m_cClasses) { classes += classEntry.Value + "," + classEntry.Key + "\n"; }
-			for (int i = 0; i < m_cClasses.Count; i++) { classes += m_cClasses[i] + "," + m_cClassesAssoc[i] + "\n"; }
-			writeToFile(location, "classes.dat", classes);
+			for (int i = 0; i < m_cClasses.Count; i++) { classes += m_cClasses[i] + "," + m_cClassesAssoc[i] + "\n"; }*/
+			
+			string classesJS = "var CLASS_LIST = [";
+			for (int i = 0; i < m_cClasses.Count; i++) 
+			{ 
+				classesJS += "'" + m_cClasses[i] + "," + m_cClassesAssoc[i] + "'";
+				if (i < m_cClasses.Count - 1) { classesJS += ","; }
+			}
+			classesJS += "];";
+			writeToFile(location, "classes.js", classesJS);
 
 			// write interfaces
-			string interfaces = "";
+			/*string interfaces = "";
 			//foreach (KeyValuePair<int, string> interfaceEntry in m_cInterfaces) { interfaces += interfaceEntry.Value + "," + interfaceEntry.Key + "\n"; }
-			for (int i = 0; i < m_cInterfaces.Count; i++) { interfaces += m_cInterfaces[i] + "," + m_cInterfacesAssoc[i] + "\n"; }
-			writeToFile(location, "interfaces.dat", interfaces);
+			for (int i = 0; i < m_cInterfaces.Count; i++) { interfaces += m_cInterfaces[i] + "," + m_cInterfacesAssoc[i] + "\n"; }*/
 			
+			string interfacesJS = "var INTERFACE_LIST = [";
+			for (int i = 0; i < m_cInterfaces.Count; i++)
+			{
+				interfacesJS += "'" + m_cInterfaces[i] + "," + m_cInterfacesAssoc[i] + "'";
+				if (i < m_cInterfaces.Count - 1) { interfacesJS += ","; }
+			}
+			interfacesJS += "];";
+			writeToFile(location, "interfaces.js", interfacesJS);
 			
 			// write "files"
-			string files = "";
+			/*string files = "";
 			//foreach (KeyValuePair<int, string> fileEntry in m_cFiles) { interfaces += fileEntry.Value + "," + fileEntry.Key + "\n"; }
-			for (int i = 0; i < m_cFiles.Count; i++) { files += m_cFiles[i] + "," + m_cFilesAssoc[i] + "\n"; }
-			writeToFile(location, "files.dat", files);
+			for (int i = 0; i < m_cFiles.Count; i++) { files += m_cFiles[i] + "," + m_cFilesAssoc[i] + "\n"; }*/
+
+			string filesJS = "var FILE_LIST = [";
+			for (int i = 0; i < m_cFiles.Count; i++)
+			{
+				filesJS += "'" + m_cFiles[i] + "," + m_cFilesAssoc[i] + "'";
+				if (i < m_cFiles.Count - 1) { filesJS += ","; }
+			}
+			filesJS += "];";
+			writeToFile(location, "files.js", filesJS);
 			
 			// TODO TODO: add in index generation function here as well, not in the program
 			// TODO: also add project description/notes thing for .apiproj files
@@ -159,7 +190,7 @@ namespace Engine
 		private bool writeToFile(string location, string fileName, string content)
 		{
 			StreamWriter fileStream = null;
-			try { fileStream = new StreamWriter(location + "/" + fileName, true); }
+			try { fileStream = new StreamWriter(location + "/" + fileName, false); }
 			catch (IOException e) { return false; } 
 
 			fileStream.WriteLine(content); 
