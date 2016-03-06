@@ -116,6 +116,7 @@ namespace Engine
 			log("API Documentation process complete!");
 			return returnedInfo;*/
 
+
 			foreach (CodeDocument doc in m_cWorkingDocuments)
 			{
 				log("Preparing to create API documentation off of current working documents...");
@@ -125,6 +126,7 @@ namespace Engine
 			}
 			
 			// TODO TODO: add in section/list saving function in here
+			// TODO TODO TODO TODO: (in other words, each html document needs to know which section to start in (use a global variable in a script put in the html itself?)
 			
 			// write sections
 			/*string sections = "";
@@ -133,7 +135,7 @@ namespace Engine
 			string sectionsJS = "var SECTION_LIST = [";
 			for (int i = 0; i < m_cSections.Count; i++)
 			{
-				sectionsJS += "'" + m_cSections[i] + "," + m_cSections[i] + "'";
+				sectionsJS += "'" + m_cSections[i] + "'";
 				if (i < m_cSections.Count - 1) { sectionsJS += ","; }
 			}
 			sectionsJS += "];";

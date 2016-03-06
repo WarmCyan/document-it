@@ -1,1 +1,1 @@
-var SECTION_LIST = [' Physics, Physics',' Font, Font'];
+var SECTION_LIST = [' Physics',' Font'];
