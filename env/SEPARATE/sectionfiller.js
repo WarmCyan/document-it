@@ -1,6 +1,10 @@
 
 window.onload = main;
 
+var doubleClickReady = false;
+
+var sidebarCollapsed = false;
+
 
 var classList = [];
 var interfaceList = [];
@@ -20,6 +24,7 @@ function main()
 
 	checkSectionExistence();
 
+	refreshSidebarSections();
 	refreshSidebarSectionContents();
 }
 
@@ -85,7 +90,25 @@ function refreshSidebarSectionContents()
 	if (fileList.length > 0) { printOutFiles(); }
 }
 
+function refreshSidebarSections()
+{
+	clearSidebarSections();
+	printOutSections();
+}
+
 function clearSidebarSectionContents() { document.getElementById("side_section_contents").innerHTML = ""; }
+function clearSidebarSections() { document.getElementById("side_sections").innerHTML = ""; }
+
+function printOutSections()
+{
+	var obj = document.getElementById("side_sections");
+
+	obj.innerHTML += "<h4 class='sectionLabel'>Sections</h4>";
+	for (var i = 0; i < sectionList.length; i++)
+	{
+		obj.innerHTML += "<div><p>" + sectionList[i][0] + "</p></div>";
+	}
+}
 
 function printOutClasses()
 {
@@ -94,7 +117,7 @@ function printOutClasses()
 	obj.innerHTML += "<h4 class='sectionLabel'>Classes</h4>";
 	for (var i = 0; i < classList.length; i++)
 	{
-		if (classList[i][1] == selectedSectionIndex) { obj.innerHTML += "<p><a href='thing.html'>" + classList[i][0] + "</a></p>"; }
+		if (classList[i][1] == selectedSectionIndex) { obj.innerHTML += "<div><p>" + classList[i][0] + "</p></div>"; }
 	}
 	obj.innerHTML += "&nbsp;";
 }
@@ -106,7 +129,7 @@ function printOutInterfaces()
 	obj.innerHTML += "<h4 class='sectionLabel'>Interfaces</h4>";
 	for (var i = 0; i < interfaceList.length; i++)
 	{
-		if (interfaceList[i][1] == selectedSectionIndex) { obj.innerHTML += "<p><a href='thing.html'>" + interfaceList[i][0] + "</a></p>"; }
+		if (interfaceList[i][1] == selectedSectionIndex) { obj.innerHTML += "<div><p>" + interfaceList[i][0] + "</p></div>"; }
 	}
 	obj.innerHTML += "&nbsp;";
 }
@@ -118,7 +141,33 @@ function printOutFiles()
 	obj.innerHTML += "<h4 class='sectionLabel'>Files</h4>";
 	for (var i = 0; i < fileList.length; i++)
 	{
-		if (fileList[i][1] == selectedSectionIndex) { obj.innerHTML += "<p><a href='thing.html'>" + fileList[i][0] + "</a></p>"; }
+		if (fileList[i][1] == selectedSectionIndex) { obj.innerHTML += "<div><p>" + fileList[i][0] + "</p></div>"; }
 	}
 	obj.innerHTML += "&nbsp;";
+}
+
+function toggleCollapseSidebar()
+{
+	if (sidebarCollapsed)
+	{
+		document.getElementById("side_bar").style.width = "300px";
+		document.getElementById("content").style.marginLeft = "300px";
+		document.getElementById("bottom_band").style.marginLeft = "300px";
+		sidebarCollapsed = false;
+	}
+	else
+	{
+		document.getElementById("side_bar").style.width = "10px";
+		document.getElementById("content").style.marginLeft = "10px";
+		document.getElementById("bottom_band").style.marginLeft = "10px";
+		sidebarCollapsed = true;
+	}
+}
+
+
+function sidebarClick()
+{
+	if (doubleClickReady) { toggleCollapseSidebar(); }
+	doubleClickReady = true;
+	setTimeout(function() { doubleClickReady = false; }, 1000);
 }
