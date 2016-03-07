@@ -13,25 +13,34 @@ to personalize your documentation! */
 
 /* -- COLORS -- */
 
-body { background-color: #CDEDD9; } 
-a { color: #338855; } 
-h3 { color: #FFFFFF; background-color: #BB3344; }
+body { background-color: #CDD9ED; }
+/*a { color: #338855; } */
+a { color: #EE6622; }
+/*h3 { color: #FFFFFF; background-color: #BB3344; }*/
+h3 { color: #FFFFFF; background-color: #CC5522; }
 
 .keyword { color: #0E4EAD; }
 .descriptionText { color: #BB3344; } /* This only applies to descriptions of input variables. */
 
 .biggerCode { background-color: rgba(0, 0, 0, .20); }
 
-.row1 { background-color: #FBFEFB; } /* For banded rows. Color of odd-numbered rows. */
-.row2 { background-color: #E1F4E5; } /* For banded rows. Color of even-numbered rows. */
+.row1 { background-color: #FFFFFF; } /* For banded rows. Color of odd-numbered rows. */
+.row2 { background-color: #FFF6F2; } /* For banded rows. Color of even-numbered rows. */
 
 .dataTable { background-color: #FFFFFF; } /* This ONLY affects the header row of the function index table. */
 
-#top_band { background-color: #338855; } /* The small colored banner that runs accross the top. */
+.sectionSelected { background-color: #393939; }
+
+#top_band { background-color: #378EEE; } /* The small colored banner that runs accross the top. */
 #logo_header_area { color: #FFFFFF; } /* Color of the header text inside top_band. */
 #content { background-color: #FFFFFF; }
-#bottom_band_container { background-color: #555555; } /* Footer, colored band at the bottom of the page. */
+#bottom_band_container { background-color: #353535; } /* Footer, colored band at the bottom of the page. */
 #footer_center { color: #AAAAAA; }
+
+#side_sections div:hover, #side_section_contents div:hover { background-color: #444444; } /* highlight color when hovering over section class/interface/file name */
+
+#side_section_contents { background-color: #111111; }
+#side_sections { background-color: #222222; }
 
 
 /* -- FONTS -- */
@@ -90,6 +99,10 @@ h3
 {
 	padding: 10px;
 	margin-left: -10px;
+	margin-bottom: -10px;
+	margin-top: -10px;
+	margin-right: 10px;
+	float: left;
 }
 
 .function_title
@@ -199,7 +212,6 @@ h3
 	width: 100%;
 	height: 250px;
 	height: 30%;
-	background-color: #6666AA;
 	padding: 0;
 	margin: 0;
 	padding-top: 1px; /* DON'T TAKE THIS OUT.....CSS IS STUPID*/
@@ -230,16 +242,11 @@ h3
 	display: block;
 	cursor: default;
 }
-#side_sections div:hover, #side_section_contents div:hover
-{
-	background-color: #000000;
-}
 
 #side_section_contents
 {
 	position: relative;
 	display: inline-block;
-	background-color: #444488;
 	/*top: 250px;
 	top: 30%;*/
 	width: 100%;
@@ -248,13 +255,6 @@ h3
 	margin: 0;
 	overflow-y: scroll;
 	overflow-x: hidden;
-}
-#side_section_contents_container
-{
-	/*position: absolute;
-	overflow: auto;*/
-	width: 100%;
-	height: 110%;
 }
 #side_bar ::-webkit-scrollbar { 
     display: none; 
@@ -268,7 +268,3 @@ h3
 	font-weight: bold;
 }
 
-.sectionSelected
-{
-	background-color: #ff0000;
-}

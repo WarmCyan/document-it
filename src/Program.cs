@@ -199,7 +199,6 @@ namespace DICI
 			g_sProjectTitle = headerText;
 			g_sProjectFolder = destFolder;
 
-			// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
 			engine.Sections = sections;
 
 			//now go through the file list and generate documentation for all of them
@@ -230,7 +229,6 @@ namespace DICI
 			//DOC GENERATOR SHOULD RETURN LIST OF STRINGS. FIRST ONE IS NAME OF CLASS, SECOND IS DESCRIPTION
 		}
 
-		//TODO: get alphabetizing functions here from DocGenerator
 		static void createIndex(List<List<string>> information)
 		{
 			string html = "";
