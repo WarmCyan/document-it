@@ -40,6 +40,7 @@ h3 { color: #FFFFFF; background-color: #CC5522; }
 #side_section_contents { background-color: #111111; }
 #side_sections { background-color: #222222; }
 
+#side_sections div p, #side_section_contents div p { color: #FFFFFF; } /* sidebar text color */
 
 /* -- FONTS -- */
 
@@ -111,16 +112,20 @@ h3
 
 .return_modifier_box { width: 30%; }
 
+.sectionLabel
+{
+	margin: 15px !important;
+	margin-left: 10px !important;
+	font-size: 14pt;
+	font-weight: bold;
+}
+
 #content
 {
 	z-index: 2;
-	margin-left: auto;
 	margin-right: auto;
 	margin-top: 50px;
-	/*width: 90%;*/
 	padding: 10px;
-
-
 	margin-left: 300px;
 }
 
@@ -135,7 +140,6 @@ h3
 #top_band
 {
 	width: 100%;
-	/*position: absolute;*/
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -148,7 +152,6 @@ h3
 {
 	bottom: -10px;
 	left: 0;
-	/*left: 300px;*/
 	
 	right: 0;
 	height: 50px;
@@ -160,7 +163,6 @@ h3
 	padding: 10px;
 	padding-top: 2px;
 	margin-left: -12px;
-	/*margin-left: 300px;*/
 }
 
 #bottom_band
@@ -173,25 +175,16 @@ h3
 	text-align: center;
 }
 
-
-
-
-
 #side_bar
 {
 	position: fixed;
 	background-color: #ff00FF;
-	height: 100%;
-	/*width: 100%;*/
-	left: 0;
-	/*top: 50px;*/
 	width: 300px;
+	height: 100%;
+	left: 0;
 	margin: 0;
 	padding: 0;
-	/*z-index: -1;*/
-
 	color: #FFFFFF;
-
 	display: inline-block;
 
 	-webkit-user-select: none; /* Chrome/Safari */        
@@ -213,27 +206,22 @@ h3
 	padding: 0;
 	margin: 0;
 	padding-top: 1px; /* DON'T TAKE THIS OUT.....CSS IS STUPID*/
-	/*top: -5px;*/
 	
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
 #side_sections div, #side_section_contents div
 {
-	/*margin: 5px;*/
 	margin: 0px;
 	padding: 0;
 	padding-top: 5px;
 	padding-bottom: 5px;
 	text-decoration: none;
-	/*margin-left: 30px;*/
 }
 #side_section_contents a
 {
 	text-decoration: none;
 	display: block;
-	/*padding-top: 5px;
-	padding-bottom: 5px;*/
 	margin: 0px;
 }
 
@@ -241,21 +229,21 @@ h3
 {
 	margin: 5px;
 	margin-left: 30px;
-	color: #FFFFFF;
 	font-weight: normal;
 	font-size: 12pt;
 	text-decoration: none;
 	width: 100%;
 	display: block;
-	cursor: default;
+}
+#side_section_contents div p
+{
+	cursor: pointer;
 }
 
 #side_section_contents
 {
 	position: relative;
 	display: inline-block;
-	/*top: 250px;
-	top: 30%;*/
 	width: 100%;
 	height: 65%;
 	padding: 0;
@@ -263,15 +251,9 @@ h3
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
-#side_bar ::-webkit-scrollbar { 
+#side_bar ::-webkit-scrollbar 
+{ 
     display: none; 
 }
 
-.sectionLabel
-{
-	margin: 15px !important;
-	margin-left: 10px !important;
-	font-size: 14pt;
-	font-weight: bold;
-}
 

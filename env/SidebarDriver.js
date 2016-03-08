@@ -1,4 +1,3 @@
-
 window.onload = main;
 
 var doubleClickReady = false;
@@ -113,7 +112,6 @@ function printOutSections()
 		if (i == selectedSectionIndex) { innerString += " class='sectionSelected'"; }
 		innerString += "><p>" + sectionList[i][0] + "</p></div>";
 		obj.innerHTML += innerString;
-		
 	}
 }
 
@@ -170,7 +168,6 @@ function toggleCollapseSidebar()
 		sidebarCollapsed = true;
 	}
 }
-
 
 // -- EVENTS --
 

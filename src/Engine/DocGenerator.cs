@@ -2,8 +2,8 @@
 // File: DocGenerator.cs
 // Author: Nathan Martindale
 // Date Created: 1/19/2015
-// Date Edited: 5/25/2015
-// Copyright © 2015 Digital Warrior Labs
+// Date Edited: 3/8/2016
+// Copyright © 2016 Digital Warrior Labs
 // Description: Class that handles creating the actual html
 //********************************************************
 
@@ -28,12 +28,15 @@ namespace Engine
 		private string m_sHTML = ""; //save all the html text to this string
 
 		private string m_sTopHeaderText = "@Document It!";
+		private int m_iSectionNumber = 0;
 
 		//construction
-		public DocGenerator(CodeDocument doc)
+		public DocGenerator() { }
+		public DocGenerator(CodeDocument doc, int sectionNumber)
 		{
 			EngineGovernor.log("DocGenerator initialized.");
 			m_cDocument = doc;
+			m_iSectionNumber = sectionNumber;
 		}
 
 		//properties
@@ -72,6 +75,7 @@ namespace Engine
 
 			fileName = writeHTML(destFolder);
 			checkCSS(destFolder);
+			checkJS(destFolder);
 
 			rootName = nameDescrip[0];
 			description = nameDescrip[1];
@@ -171,35 +175,33 @@ namespace Engine
 		}
 
 		//returns a version of the link text WITHOUT punctuation, and lowercase, etc. etc....
-		public string makeSafeLink(string originalLink)
+		// (static so that it can be accessed ffrom outside)
+		public static string makeSafeLink(string originalLink)
 		{
-			//EngineGovernor.log("DEBUG - : Trying to make '" + originalLink + "' a safe link", 1);
 			string link = originalLink.ToLower();
 
-			link = takeOutString(link, ",");
-			link = takeOutString(link, ".");
-			link = takeOutString(link, "'");
-			link = takeOutString(link, "\"");
-			link = takeOutString(link, ";");
-			link = takeOutString(link, "?");
-			link = takeOutString(link, "!");
-			link = takeOutString(link, "(");
-			link = takeOutString(link, ")");
-			link = takeOutString(link, "[");
-			link = takeOutString(link, "]");
-			link = takeOutString(link, "{");
-			link = takeOutString(link, "}");
-			link = takeOutString(link, "|");
-			link = takeOutString(link, "/");
-			link = takeOutString(link, "\\");
-
-			//EngineGovernor.log("DEBUG - : Resultant safe link: '" + link + "'", 1);
+			link = DocGenerator.takeOutString(link, ",");
+			link = DocGenerator.takeOutString(link, ".");
+			link = DocGenerator.takeOutString(link, "'");
+			link = DocGenerator.takeOutString(link, "\"");
+			link = DocGenerator.takeOutString(link, ";");
+			link = DocGenerator.takeOutString(link, "?");
+			link = DocGenerator.takeOutString(link, "!");
+			link = DocGenerator.takeOutString(link, "(");
+			link = DocGenerator.takeOutString(link, ")");
+			link = DocGenerator.takeOutString(link, "[");
+			link = DocGenerator.takeOutString(link, "]");
+			link = DocGenerator.takeOutString(link, "{");
+			link = DocGenerator.takeOutString(link, "}");
+			link = DocGenerator.takeOutString(link, "|");
+			link = DocGenerator.takeOutString(link, "/");
+			link = DocGenerator.takeOutString(link, "\\");
 
 			return link;
 		}
 
 		//removes the specified string from the given string, IF IT HAS IT (this function performs the check. Returns original string if character(s) aren't found)
-		private string takeOutString(string source, string removeMe)
+		private static string takeOutString(string source, string removeMe)
 		{
 			//EngineGovernor.log("DEBUG - : Trying to remove '" + removeMe + "' from '" + source + "'", 1);
 			while (source.Contains(removeMe))
@@ -241,7 +243,7 @@ namespace Engine
 
 						//string endpunctuation = ""; 
 
-						words[i] = "<a href='" + makeSafeLink(linkText) + ".html'>" + linkText + "</a>";
+						words[i] = "<a href='" + DocGenerator.makeSafeLink(linkText) + ".html'>" + linkText + "</a>";
 						//EngineGovernor.log("DEBUG - : : : Link now reads: '" + words[i] + "'", 1);
 					}
 
@@ -317,10 +319,20 @@ namespace Engine
 			html("<html>\n\t<head>");
 			html("\n\t\t<title>" + m_cRoot.Name + "</title>");
 			html("\n\t\t<link rel='stylesheet' type='text/css' href='api_style.css'>");
-			html("\n\t<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>");
+			html("\n\t\t<script src='SidebarDriver.js'></script>");
+			html("\n\t\t<script src='sections.js'></script>");
+			html("\n\t\t<script src='classes.js'></script>");
+			html("\n\t\t<script src='interfaces.js'></script>");
+			html("\n\t\t<script src='files.js'></script>");
+			html("\n\t\t<script>selectedSectionIndex = " + m_iSectionNumber + ";</script>");
+			html("\n\t\t<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>");
 			html("\n\t</head>\n\t<body>");
 			html("\n\n<div id='top_band'></div>");
 			html("\n<div id='logo_header_area'><h1>" + m_sTopHeaderText + "</h1></div>");
+			html("\n<div id='side_bar' onclick='sidebarClick()'>");
+			html("\n\t<div id='side_sections'></div>");
+			html("\n\t<div id='side_section_contents'></div>");
+			html("\n</div>");
 			html("\n<div id='content'>");
 			//EngineGovernor.log("DEBUG - Finished header stuff", 1);
 		}
@@ -610,9 +622,9 @@ namespace Engine
 		private void footerStuff()
 		{
 			//EngineGovernor.log("DEBUG - Writing out footer stuff.", 1);
-			html("\n\t</div>\n\t<div id='bottom_band'>\n\t\t<div id='footer_center'>");
+			html("\n\t</div>\n\t<div id='bottom_band_container'><div id='bottom_band'>\n\t\t<div id='footer_center'>");
 			html("<p><i>Generated by Document It engine " + EngineGovernor.VERSION() + "</i></br>Copyright © 2015 Digital Warrior Labs</p>");
-			html("\n\t</div>\n</body>\n</html>");
+			html("\n\t</div></div>\n</body>\n</html>");
 			//EngineGovernor.log("DEBUG - Footer complete.", 1);
 		}
 
@@ -630,7 +642,7 @@ namespace Engine
 			}
 
 			//EngineGovernor.log("DEBUG - Deciding HTML file name...", 1);
-			string filename = makeSafeLink(m_cRoot.Name) + ".html";
+			string filename = DocGenerator.makeSafeLink(m_cRoot.Name) + ".html";
 			//EngineGovernor.log("DEBUG - Decided on '" + filename + "'", 1);
 			//EngineGovernor.log("DEBUG - Final file path is '" + destFolder + filename + "'", 1);
 
@@ -643,6 +655,34 @@ namespace Engine
 			fileStream.Close();
 			EngineGovernor.log("Finished file creation.");
 			return filename;
+		}
+
+		private void checkJS(string destFolder)
+		{
+			EngineGovernor.log("Checking destination '" + destFolder + "' for SidebarDriver.js");
+
+			if (!destFolder.EndsWith("/")) { destFolder += "/"; }
+
+			// check if it already exists or not
+			if (!File.Exists(destFolder + "SidebarDriver.js"))
+			{
+				EngineGovernor.log("Didn't find JavaScrit files in destination folder, attempting to copy one from local folder...");
+
+				string localJSCopy = Uri.UnescapeDataString(new Uri(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase) + "/SidebarDriver.js").AbsolutePath);
+
+				// make sure local copy exists
+				if (!File.Exists(localJSCopy))
+				{
+					EngineGovernor.log("WARNING - No local copy of SidebarDriver.js was found. Engine will continue, but result files will not have the proper stylsheet applied. Please reacquire your copy of SidebarDriver.js.", -1);
+
+					return;
+				}
+
+				// copy local version
+				File.Copy(localJSCopy, destFolder + "SidebarDriver.js");
+				EngineGovernor.log("Copied local version of SidebarDriver.js to destination folder!");
+			}
+			else { EngineGovernor.log("JavaScript files found in destination folder, no further action necessary"); }
 		}
 
 		//make sure that an api_style.css file exists in the output folder, if not try to copy local one there

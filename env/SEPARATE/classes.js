@@ -1,1 +1,1 @@
-var CLASS_LIST = ['Physics,0','PhysicsEngine,0','CollisionManifold,0','Symbol,1','Text,1','TextChar,1','Animation,1'];
+var CLASS_LIST = ['Physics,0,physics.html','PhysicsEngine,0,physicsengine.html','CollisionManifold,0,collisionmanifold.html','Symbol,1,symbol.html','Text,1,text.html','TextChar,1,textchar.html','Animation,1,animation.html'];

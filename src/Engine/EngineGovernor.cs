@@ -34,6 +34,7 @@ namespace Engine
 
 
 		private List<CodeDocument> m_cWorkingDocuments = new List<CodeDocument>();
+		private List<int> m_cWorkingDocumentsAssoc = new List<int>();
 
 		private List<string> m_cSections = new List<string>();
 
@@ -80,6 +81,7 @@ namespace Engine
 			foreach (CodeDocument doc in docList) 
 			{ 
 				m_cWorkingDocuments.Add(doc); 
+				m_cWorkingDocumentsAssoc.Add(section);
 				if (doc.CodeObjects[0].CodeType == "class") 
 				{ 
 					//m_cClasses.Add(section, doc.CodeObjects[0].Name); 
@@ -98,7 +100,6 @@ namespace Engine
 					m_cFiles.Add(doc.CodeObjects[0].Name); 
 					m_cFilesAssoc.Add(section);
 				} 
-				
 			}
 			log("Engine governor has received parser's documents and stored in list of current working documents.");
 		}
@@ -116,11 +117,16 @@ namespace Engine
 			log("API Documentation process complete!");
 			return returnedInfo;*/
 
-
-			foreach (CodeDocument doc in m_cWorkingDocuments)
+			/*foreach (CodeDocument doc in m_cWorkingDocuments)
 			{
 				log("Preparing to create API documentation off of current working documents...");
 				DocGenerator generator = new DocGenerator(doc);
+				generator.TopHeaderText = topHeaderText;
+				generator.createHTMLDocument(location);
+			}*/
+			for (int i = 0; i < m_cWorkingDocuments.Count; i++)
+			{
+				DocGenerator generator = new DocGenerator(m_cWorkingDocuments[i], m_cWorkingDocumentsAssoc[i]);
 				generator.TopHeaderText = topHeaderText;
 				generator.createHTMLDocument(location);
 			}
@@ -149,7 +155,8 @@ namespace Engine
 			string classesJS = "var CLASS_LIST = [";
 			for (int i = 0; i < m_cClasses.Count; i++) 
 			{ 
-				classesJS += "'" + m_cClasses[i] + "," + m_cClassesAssoc[i] + "'";
+				string link = DocGenerator.makeSafeLink(m_cClasses[i]) + ".html";
+				classesJS += "'" + m_cClasses[i] + "," + m_cClassesAssoc[i] + "," + link + "'";
 				if (i < m_cClasses.Count - 1) { classesJS += ","; }
 			}
 			classesJS += "];";
@@ -163,7 +170,8 @@ namespace Engine
 			string interfacesJS = "var INTERFACE_LIST = [";
 			for (int i = 0; i < m_cInterfaces.Count; i++)
 			{
-				interfacesJS += "'" + m_cInterfaces[i] + "," + m_cInterfacesAssoc[i] + "'";
+				string link = DocGenerator.makeSafeLink(m_cInterfaces[i]) + ".html";
+				interfacesJS += "'" + m_cInterfaces[i] + "," + m_cInterfacesAssoc[i] + "," + link + "'";
 				if (i < m_cInterfaces.Count - 1) { interfacesJS += ","; }
 			}
 			interfacesJS += "];";
@@ -177,7 +185,8 @@ namespace Engine
 			string filesJS = "var FILE_LIST = [";
 			for (int i = 0; i < m_cFiles.Count; i++)
 			{
-				filesJS += "'" + m_cFiles[i] + "," + m_cFilesAssoc[i] + "'";
+				string link = DocGenerator.makeSafeLink(m_cFiles[i]) + ".html";
+				filesJS += "'" + m_cFiles[i] + "," + m_cFilesAssoc[i] + "," + link + "'";
 				if (i < m_cFiles.Count - 1) { filesJS += ","; }
 			}
 			filesJS += "];";
@@ -200,7 +209,6 @@ namespace Engine
 
 			return true;
 		}
-
 
 		//get the version information
 		public static string VERSION()

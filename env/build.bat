@@ -6,4 +6,5 @@ del ..\bin\* /q /f
 call csc /out:..\bin\dici.exe ..\src\*.cs ..\src\engine\*.cs 
 
 copy ..\src\api_style.css ..\bin
+copy ..\src\SidebarDriver.js ..\bin
 copy ..\bin\* .\*
