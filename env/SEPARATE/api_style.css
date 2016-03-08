@@ -2,10 +2,10 @@
 	File: api_style.css
 	Author: Nathan Martindale
 	Date created: 1/19/2015
-	Date edited: 5/20/2015
+	Date edited: 3/8/2015
 	Copyright © 2015 Digital Warrior Labs
 	
-	Style version: 1.1
+	Style version: 2.0
 *************************************************/
 
 /* Nice, safe, editale stuff is up here. Feel free to mess around with these values
@@ -14,15 +14,13 @@ to personalize your documentation! */
 /* -- COLORS -- */
 
 body { background-color: #CDD9ED; }
-/*a { color: #338855; } */
 a { color: #EE6622; }
-/*h3 { color: #FFFFFF; background-color: #BB3344; }*/
 h3 { color: #FFFFFF; background-color: #CC5522; }
 
 .keyword { color: #0E4EAD; }
-.descriptionText { color: #BB3344; } /* This only applies to descriptions of input variables. */
+.descriptionText { color: #3344BB; } /* This only applies to descriptions of input variables. */
 
-.biggerCode { background-color: rgba(0, 0, 0, .20); }
+.biggerCode { background-color: rgba(0, 15, 20, .25); }
 
 .row1 { background-color: #FFFFFF; } /* For banded rows. Color of odd-numbered rows. */
 .row2 { background-color: #FFF6F2; } /* For banded rows. Color of even-numbered rows. */
@@ -37,7 +35,7 @@ h3 { color: #FFFFFF; background-color: #CC5522; }
 #bottom_band_container { background-color: #353535; } /* Footer, colored band at the bottom of the page. */
 #footer_center { color: #AAAAAA; }
 
-#side_sections div:hover, #side_section_contents div:hover { background-color: #444444; } /* highlight color when hovering over section class/interface/file name */
+#side_sections div:hover, #side_section_contents a:hover { background-color: #444444; } /* highlight color when hovering over section class/interface/file name */
 
 #side_section_contents { background-color: #111111; }
 #side_sections { background-color: #222222; }
@@ -227,7 +225,16 @@ h3
 	padding: 0;
 	padding-top: 5px;
 	padding-bottom: 5px;
+	text-decoration: none;
 	/*margin-left: 30px;*/
+}
+#side_section_contents a
+{
+	text-decoration: none;
+	display: block;
+	/*padding-top: 5px;
+	padding-bottom: 5px;*/
+	margin: 0px;
 }
 
 #side_sections div p, #side_section_contents div p
