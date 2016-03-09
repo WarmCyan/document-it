@@ -47,7 +47,6 @@ namespace Engine
 		{
 			//first assign root object
 			m_cRoot = m_cDocument.CodeObjects[0];
-			//EngineGovernor.log("DEBUG - Saved a root object.", 1);
 
 			if (m_cRoot.CodeType != "class" && m_cRoot.CodeType != "interface") { EngineGovernor.log("ERROR - Could not find a root code object of type class or interface. Generator currently has no implementation for this type of file.", -1); return null; }
 
@@ -97,18 +96,12 @@ namespace Engine
 			List<CodeObject> docObjects = m_cRoot.Children;
 			int objectCount = docObjects.Count;
 
-			//EngineGovernor.log("DEBUG - Preparing to alphabetize " + objectCount + " objects", 1);
-
 			//foreach list (continually decreasing) starting at 1 to avoid root (0)
 			for (int startIndex = 1; startIndex < objectCount - 1; startIndex++)
 			{
-				//EngineGovernor.log("DEBUG - : Starting from index " + startIndex, 1);
 				int indexOfLowest = startIndex; //by default, say the first one in list is lowest
-				//EngineGovernor.log("DEBUG - : : Default lowest is " + docObjects[indexOfLowest].Name, 1);
 				for (int i = startIndex + 1; i < objectCount; i++)
 				{
-					//EngineGovernor.log("DEBUG - : : Comparing " + docObjects[indexOfLowest].Name + " with " + docObjects[i].Name, 1);
-
 					//change if 1
 					int result = compareAlpha(docObjects[indexOfLowest].Name, docObjects[i].Name);
 					if (result == 1) { indexOfLowest = i; /*EngineGovernor.log("DEBUG - : : : " + docObjects[i].Name + " was lower, replacing index of lowest.", 1);*/ }
@@ -116,14 +109,12 @@ namespace Engine
 				
 				//checked all of them, now swap
 				docObjects = swapIndicies(indexOfLowest, startIndex, docObjects);
-				//EngineGovernor.log("DEBUG - : : Swapped " + indexOfLowest + " with " + startIndex, 1);
 			}
 
 			m_cRoot.Children = docObjects;
 			EngineGovernor.log("Finished alphabetizing");
 		}
 		
-		//private int findIndexOfLowest(List<CodeObject>
 		private List<CodeObject> swapIndicies(int index1, int index2, List<CodeObject> list)
 		{
 			CodeObject temp = list[index1];
@@ -203,14 +194,7 @@ namespace Engine
 		//removes the specified string from the given string, IF IT HAS IT (this function performs the check. Returns original string if character(s) aren't found)
 		private static string takeOutString(string source, string removeMe)
 		{
-			//EngineGovernor.log("DEBUG - : Trying to remove '" + removeMe + "' from '" + source + "'", 1);
-			while (source.Contains(removeMe))
-			{
-				//EngineGovernor.log("DEBUG - : : Found string to remove", 1);
-				source = source.Remove(source.IndexOf(removeMe), 1); 
-				//EngineGovernor.log("DEBUG - : : Removed it! Source now reads '" + source + "'", 1);
-			}
-			//EngineGovernor.log("DEBUG - : Removed all instances of given string.", 1);
+			while (source.Contains(removeMe)) { source = source.Remove(source.IndexOf(removeMe), 1); }
 
 			return source;
 		}
@@ -227,38 +211,29 @@ namespace Engine
 				{
 					if (words[i].Contains("@l:") || words[i].Contains("@link:"))
 					{
-						//EngineGovernor.log("DEBUG - : : Found a link!", 1);
 						string linkText = "";
 						if (words[i].IndexOf("@l:") != -1 && words[i].Length > words[i].IndexOf("@l:") + 3)
 						{
 							linkText = words[i].Substring(words[i].IndexOf("@l:") + 3);
-							//EngineGovernor.log("DEBUG - : : : Found shortened version of link tag, taking link text: '" + linkText + "'", 1);
 						}
 						else if (words[i].IndexOf("@link:") != -1 && words[i].Length > words[i].IndexOf("@link:") + 6)
 						{
 							linkText = words[i].Substring(words[i].IndexOf("@link:") + 6);
-							//EngineGovernor.log("DEBUG - : : : Found long version of link tag, taking link text: '" + linkText + "'", 1);
 						}
 						else { EngineGovernor.log("WARNING - Found an empty link tag: '" + source + "'", -1); }
 
 						//string endpunctuation = ""; 
 
 						words[i] = "<a href='" + DocGenerator.makeSafeLink(linkText) + ".html'>" + linkText + "</a>";
-						//EngineGovernor.log("DEBUG - : : : Link now reads: '" + words[i] + "'", 1);
 					}
 
 					//recombine into the result string
 					if (i == 0) { result = words[i]; }
 					else { result += " " + words[i]; }
 				}
-				//EngineGovernor.log("DEBUG - : Finished substituting links. '" + result + "'", 1);
 				return result;
 			}
-			else
-			{
-				//EngineGovernor.log("DEBUG - : No links found in string.", 1);
-				return source;
-			}
+			else { return source; }
 		}
 
 		//gets the stuff within the parenethesis for parameters for input of the given object (either constructor or function) 
@@ -328,7 +303,7 @@ namespace Engine
 			html("\n\t\t<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>");
 			html("\n\t</head>\n\t<body>");
 			html("\n\n<div id='top_band'></div>");
-			html("\n<div id='logo_header_area'><h1>" + m_sTopHeaderText + "</h1></div>");
+			html("\n<div id='logo_header_area'><h1 onclick='window.location=\"index.html\"'>" + m_sTopHeaderText + "</h1></div>");
 			html("\n<div id='side_bar' onclick='sidebarClick()'>");
 			html("\n\t<div id='side_sections'></div>");
 			html("\n\t<div id='side_section_contents'></div>");
@@ -623,7 +598,7 @@ namespace Engine
 		{
 			//EngineGovernor.log("DEBUG - Writing out footer stuff.", 1);
 			html("\n\t</div>\n\t<div id='bottom_band_container'><div id='bottom_band'>\n\t\t<div id='footer_center'>");
-			html("<p><i>Generated by Document It engine " + EngineGovernor.VERSION() + "</i></br>Copyright © 2015 Digital Warrior Labs</p>");
+			html("<p><i>Generated by Document It engine " + EngineGovernor.VERSION() + "</i></br>Copyright © 2016 Digital Warrior Labs</p>");
 			html("\n\t</div></div>\n</body>\n</html>");
 			//EngineGovernor.log("DEBUG - Footer complete.", 1);
 		}
@@ -641,13 +616,9 @@ namespace Engine
 				destFolder += "/";
 			}
 
-			//EngineGovernor.log("DEBUG - Deciding HTML file name...", 1);
 			string filename = DocGenerator.makeSafeLink(m_cRoot.Name) + ".html";
-			//EngineGovernor.log("DEBUG - Decided on '" + filename + "'", 1);
-			//EngineGovernor.log("DEBUG - Final file path is '" + destFolder + filename + "'", 1);
 
 			//write out the HTML
-
 			StreamWriter fileStream = null;
 			try { fileStream = new StreamWriter(destFolder + filename, false); }
 			catch (IOException e) { EngineGovernor.log("ERROR - Could not open file stream. Did you input the correct destination folder path? (" + destFolder + " was given.)", -1); Environment.Exit(2); }

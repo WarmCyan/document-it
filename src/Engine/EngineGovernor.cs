@@ -1,7 +1,7 @@
 ﻿//*************************************************************
 //  File: EngineGovernor.cs
 //  Date created: 1/15/2015
-//  Date edited: 2/28/2016
+//  Date edited: 3/8/2016
 //  Author: Nathan Martindale
 //  Copyright © 2016 Digital Warrior Labs
 //  Description: Class that controls the engine, and takes care of all objects, kind of a master class
@@ -19,11 +19,11 @@ namespace Engine
 	public class EngineGovernor
 	{
 		//static variables
-		public static int VERSION_MAJOR = 1;
+		public static int VERSION_MAJOR = 2;
 		public static int VERSION_MINOR = 0;
-		public static int VERSION_BUILD = 166;
-		public static int VERSION_REVISION = 2;
-		public static string BUILD_DATE = "5/27/2015";
+		public static int VERSION_BUILD = 38161;
+		public static int VERSION_REVISION = 0;
+		public static string BUILD_DATE = "3/8/2016";
 
 
 		//member variables
@@ -37,11 +37,6 @@ namespace Engine
 		private List<int> m_cWorkingDocumentsAssoc = new List<int>();
 
 		private List<string> m_cSections = new List<string>();
-
-		// in each of the dictionaries, the int represents index of section in m_cSections above that its associated with (for output javascript file)
-		/*private Dictionary<int, string> m_cClasses = new Dictionary<int, string>();
-		private Dictionary<int, string> m_cInterfaces = new Dictionary<int, string>();
-		private Dictionary<int, string> m_cFiles = new Dictionary<int, string>();*/
 
 		private List<string> m_cClasses = new List<string>();
 		private List<string> m_cInterfaces = new List<string>();
@@ -74,29 +69,23 @@ namespace Engine
 		{
 			log("File analysis requested, starting parser...");
 			CodeParser parser = new CodeParser();
-			//CodeDocument doc = parser.parseFile(filename);
 			List<CodeDocument> docList = parser.parseFile(filename);
-			//m_cWorkingDocument = doc;
-			//m_cWorkingDocuments = docList;
 			foreach (CodeDocument doc in docList) 
 			{ 
 				m_cWorkingDocuments.Add(doc); 
 				m_cWorkingDocumentsAssoc.Add(section);
 				if (doc.CodeObjects[0].CodeType == "class") 
 				{ 
-					//m_cClasses.Add(section, doc.CodeObjects[0].Name); 
 					m_cClasses.Add(doc.CodeObjects[0].Name); 
 					m_cClassesAssoc.Add(section);
 				} 
 				else if (doc.CodeObjects[0].CodeType == "interface") 
 				{ 
-					//m_cInterfaces.Add(section, doc.CodeObjects[0].Name); 
 					m_cInterfaces.Add(doc.CodeObjects[0].Name); 
 					m_cInterfacesAssoc.Add(section);
 				}
 				else 
 				{ 
-					//m_cFiles.Add(section, doc.CodeObjects[0].Name); 
 					m_cFiles.Add(doc.CodeObjects[0].Name); 
 					m_cFilesAssoc.Add(section);
 				} 
@@ -104,40 +93,19 @@ namespace Engine
 			log("Engine governor has received parser's documents and stored in list of current working documents.");
 		}
 
-		//creates the html API documentation (assumes m_cWorkingDocument has already been assigned)
-		//Returns 3 strings, filename, and class(or interface name), and description
-		// NEW: generates ALL api documentation of ALL code that has been analyzed up until this point!
-		public List<string> generateAPIDoc(string location, string topHeaderText)
+		// creates the html API documentation (assumes m_cWorkingDocument has already been assigned)
+		// NOTE: generates ALL api documentation of ALL code that has been analyzed up until this point!
+		public void generateAPIDoc(string location, string topHeaderText)
 		{
-			/*if (m_cWorkingDocument == null) { log("ERROR - Working Document has not been set. You must analyze a code file before generating API documentation for it.", -1); return null; }
-			log("Preparing to create API documentation off of current working document...");
-			DocGenerator generator = new DocGenerator(m_cWorkingDocument);
-			generator.TopHeaderText = topHeaderText;
-			List<string> returnedInfo = generator.createHTMLDocument(location);
-			log("API Documentation process complete!");
-			return returnedInfo;*/
-
-			/*foreach (CodeDocument doc in m_cWorkingDocuments)
-			{
-				log("Preparing to create API documentation off of current working documents...");
-				DocGenerator generator = new DocGenerator(doc);
-				generator.TopHeaderText = topHeaderText;
-				generator.createHTMLDocument(location);
-			}*/
+			List<List<string>> info = new List<List<string>>();
 			for (int i = 0; i < m_cWorkingDocuments.Count; i++)
 			{
 				DocGenerator generator = new DocGenerator(m_cWorkingDocuments[i], m_cWorkingDocumentsAssoc[i]);
 				generator.TopHeaderText = topHeaderText;
-				generator.createHTMLDocument(location);
+				info.Add(generator.createHTMLDocument(location));
 			}
 			
-			// TODO TODO: add in section/list saving function in here
-			// TODO TODO TODO TODO: (in other words, each html document needs to know which section to start in (use a global variable in a script put in the html itself?)
-			
-			// write sections
-			/*string sections = "";
-			foreach (string sec in m_cSections) { sections += sec + "\n"; }*/
-
+			// sections
 			string sectionsJS = "var SECTION_LIST = [";
 			for (int i = 0; i < m_cSections.Count; i++)
 			{
@@ -147,11 +115,7 @@ namespace Engine
 			sectionsJS += "];";
 			writeToFile(location, "sections.js", sectionsJS);
 			
-			// write classes
-			/*string classes = "";
-			//foreach (KeyValuePair<int, string> classEntry in m_cClasses) { classes += classEntry.Value + "," + classEntry.Key + "\n"; }
-			for (int i = 0; i < m_cClasses.Count; i++) { classes += m_cClasses[i] + "," + m_cClassesAssoc[i] + "\n"; }*/
-			
+			// classes
 			string classesJS = "var CLASS_LIST = [";
 			for (int i = 0; i < m_cClasses.Count; i++) 
 			{ 
@@ -163,10 +127,6 @@ namespace Engine
 			writeToFile(location, "classes.js", classesJS);
 
 			// write interfaces
-			/*string interfaces = "";
-			//foreach (KeyValuePair<int, string> interfaceEntry in m_cInterfaces) { interfaces += interfaceEntry.Value + "," + interfaceEntry.Key + "\n"; }
-			for (int i = 0; i < m_cInterfaces.Count; i++) { interfaces += m_cInterfaces[i] + "," + m_cInterfacesAssoc[i] + "\n"; }*/
-			
 			string interfacesJS = "var INTERFACE_LIST = [";
 			for (int i = 0; i < m_cInterfaces.Count; i++)
 			{
@@ -178,10 +138,6 @@ namespace Engine
 			writeToFile(location, "interfaces.js", interfacesJS);
 			
 			// write "files"
-			/*string files = "";
-			//foreach (KeyValuePair<int, string> fileEntry in m_cFiles) { interfaces += fileEntry.Value + "," + fileEntry.Key + "\n"; }
-			for (int i = 0; i < m_cFiles.Count; i++) { files += m_cFiles[i] + "," + m_cFilesAssoc[i] + "\n"; }*/
-
 			string filesJS = "var FILE_LIST = [";
 			for (int i = 0; i < m_cFiles.Count; i++)
 			{
@@ -191,11 +147,66 @@ namespace Engine
 			}
 			filesJS += "];";
 			writeToFile(location, "files.js", filesJS);
-			
-			// TODO TODO: add in index generation function here as well, not in the program
-			// TODO: also add project description/notes thing for .apiproj files
 
-			return null;
+			createIndex(info, topHeaderText, location);
+		}
+		
+		static void createIndex(List<List<string>> information, string projectTitle, string projectFolder)
+		{
+			string html = "";
+
+			html += "<html>\n\t<head>";
+			html += "\n\t\t<title>" + projectTitle + " Project</title>";
+			html += "\n\t\t<link rel='stylesheet' type='text/css' href='api_style.css'>";
+			html += "\n\t\t<script src='SidebarDriver.js'></script>";
+			html += "\n\t\t<script src='sections.js'></script>";
+			html += "\n\t\t<script src='classes.js'></script>";
+			html += "\n\t\t<script src='interfaces.js'></script>";
+			html += "\n\t\t<script src='files.js'></script>";
+			html += "\n\t\t<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>";
+			html += "\n\t</head>\n\t<body>";
+			html += "\n\n<div id='top_band'></div>";
+			html += "\n<div id='logo_header_area'><h1>" + projectTitle + "</h1></div>";
+			html += "\n<div id='side_bar' onclick='sidebarClick()'>";
+			html += "\n\t<div id='side_sections'></div>";
+			html += "\n\t<div id='side_section_contents'></div>";
+			html += "\n</div>";
+			html += "\n<div id='content'>";
+			html += "\n<h2>" + projectTitle + " Class Index</h2>";
+
+			html += "\n\t<table class='dataTable'>\n\t\t<tr><th>Class/Interface</th><th>Description</th></tr>";
+
+			int row = 1; //for banding
+
+			for (int i = 0; i < information.Count; i++)
+			{
+				//get all the specific information for current class/interface
+				string type = information[i][1].Substring(0, information[i][1].IndexOf(" "));
+				string name = information[i][1].Substring(information[i][1].IndexOf(" "));
+				string file = information[i][0];
+				string descrip = information[i][2];
+
+				html += "\n\t\t<tr class='row" + row + "'>";
+				html += "\n\t\t\t<td class='return_modifier_box'><code><span class='keyword'>" + type + "</span> <a href='" + file + "'>" + name + "</a></code></td>";
+				html += "\n\t\t\t<td>" + descrip + "</td>";
+				html += "\n\t\t</tr>";
+
+				//for banding
+				if (row == 1) { row = 2; }
+				else { row = 1; }
+			}
+			html += "</table>\n\t</div>\n\t<div id='bottom_band_container'><div id='bottom_band'>\n\t\t<div id='footer_center'>";
+			html += "<p><i>Index page generated by DICI " + VERSION() + "</i></br>Copyright © 2016 Digital Warrior Labs</p>";
+			html += "</div></div></body></html>";
+
+			if (!projectFolder.EndsWith("/"))
+			{
+				projectFolder += "/";
+			}
+
+			StreamWriter fileStream = new StreamWriter(projectFolder + "index.html", false);
+			fileStream.WriteLine(html);
+			fileStream.Close();
 		}
 
 		private bool writeToFile(string location, string fileName, string content)
@@ -213,7 +224,7 @@ namespace Engine
 		//get the version information
 		public static string VERSION()
 		{
-			return VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_BUILD + "." + VERSION_REVISION;
+			return VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_REVISION;
 		}
 
 		//global logging function

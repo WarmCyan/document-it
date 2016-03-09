@@ -18,10 +18,10 @@ namespace DICI
 	class Program
 	{
 		//static variables
-		public static int VERSION_MAJOR = 1;
-		public static int VERSION_MINOR = 1;
-		public static int VERSION_BUILD = 50;
-		public static int VERSION_REVISION = 1;
+		public static int VERSION_MAJOR = 2;
+		public static int VERSION_MINOR = 0;
+		public static int VERSION_BUILD = 38161;
+		public static int VERSION_REVISION = 0;
 
 		public static string g_sProjectTitle = ""; //I KNOW IT'S BAD TO MAKE THIS A GLOBAL, BUT I DON'T WANT TO HAVE MESSY RETURNS
 		public static string g_sProjectFolder = ""; //BAD BAD BAD, BAD ME.
@@ -40,8 +40,6 @@ namespace DICI
 
 			EngineGovernor engine = new EngineGovernor(logSystem);
 			
-			
-
 			//running from executuable, instead of command line
 			if (args.Length == 0)
 			{
@@ -75,7 +73,7 @@ namespace DICI
 					if (l_file.EndsWith(".apiproj")) 
 					{ 
 						indexInformation = runProject(l_file, null); // TODO: TAKE OUT ENTIRE SINGLE FILE THING AT SOME POINT
-						if (indexInformation != null) { createIndex(indexInformation); }
+						/*if (indexInformation != null) { createIndex(indexInformation); }*/
 						continue; 
 					}
 
@@ -100,20 +98,10 @@ namespace DICI
 				if (!projectFile.EndsWith(".apiproj")) { Console.WriteLine("If running this program with command line arguments, you MUST supply an .apiproj file as the first argument."); }
 
 				indexInformation = runProject(projectFile, engine);
-				createIndex(indexInformation);
+				//createIndex(indexInformation);
 			}
 			
 		}
-
-		//run the engine governor with the passed data (returns result information)
-		/*static List<string> run(string file, string resultFolder, string headerText)
-		{
-			if (headerText == "") { headerText = "@Document It!"; }
-
-			engine.runAnalysis(file);
-			List<string> info = engine.generateAPIDoc(resultFolder, headerText);
-			return info;
-		}*/
 
 		//function that takes care of reading the special .apiproj files 
 		//returns list of all information from files created
@@ -121,9 +109,6 @@ namespace DICI
 		{
 			List<List<string>> compiledInfo = new List<List<string>>();
 
-			//project properties
-			//List<string> fileList = new List<string>();
-			
 			int currentSectionID = -1;
 			List<string> sections = new List<string>();
 			//Dictionary<int, string> fileList = new Dictionary<int, string>();  // int is index of section
@@ -191,7 +176,6 @@ namespace DICI
 					if (currentSectionID == -1) { sections.Add("All"); currentSectionID = 0; }
 					fileList.Add(fileLines[i]);
 					fileListAssoc.Add(currentSectionID);
-					//fileList.Add(currentSectionID, fileLines[i]);
 				}
 			}
 			Console.WriteLine("Analyzed successfully!");
@@ -203,16 +187,6 @@ namespace DICI
 
 			//now go through the file list and generate documentation for all of them
 			Console.WriteLine("Running documentation engine on file list...");
-			/*foreach (string projFile in fileList)
-			{
-				List<string> info = run(projFile, destFolder, headerText);
-				compiledInfo.Add(info);
-			}*/
-			//foreach (string projFile in fileList.Keys)
-			/*foreach (KeyValuePair<int, string> entry in fileList)
-			{
-				engine.runAnalysis(entry.Value, entry.Key);
-			}*/
 			for (int i = 0; i < fileList.Count; i++)
 			{
 				engine.runAnalysis(fileList[i], fileListAssoc[i]);
@@ -229,62 +203,10 @@ namespace DICI
 			//DOC GENERATOR SHOULD RETURN LIST OF STRINGS. FIRST ONE IS NAME OF CLASS, SECOND IS DESCRIPTION
 		}
 
-		static void createIndex(List<List<string>> information)
-		{
-			string html = "";
-			Console.WriteLine("Creating index page for project...");
-
-			html += "<html>\n\t<head>";
-			html += "\n\t\t<title>" + g_sProjectTitle + " Project</title>";
-			html += "\n\t\t<link rel='stylesheet' type='text/css' href='api_style.css'>";
-			html += "\n\t<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>";
-			html += "\n\t</head>\n\t<body>";
-			html += "\n\n<div id='top_band'></div>";
-			html += "\n<div id='logo_header_area'><h1>" + g_sProjectTitle + "</h1></div>";
-			html += "\n<div id='content'>";
-			html += "\n<h2>" + g_sProjectTitle + " Class Index</h2>";
-
-			html += "\n\t<table class='dataTable'>\n\t\t<tr><th>Class/Interface</th><th>Description</th></tr>";
-
-			int row = 1; //for banding
-
-			for (int i = 0; i < information.Count; i++)
-			{
-				//get all the specific information for current class/interface
-				string type = information[i][1].Substring(0, information[i][1].IndexOf(" "));
-				string name = information[i][1].Substring(information[i][1].IndexOf(" "));
-				string file = information[i][0];
-				string descrip = information[i][2];
-
-				html += "\n\t\t<tr class='row" + row + "'>";
-				html += "\n\t\t\t<td class='return_modifier_box'><code><span class='keyword'>" + type + "</span> <a href='" + file + "'>" + name + "</a></code></td>";
-				html += "\n\t\t\t<td>" + descrip + "</td>";
-				html += "\n\t\t</tr>";
-
-				//for banding
-				if (row == 1) { row = 2; }
-				else { row = 1; }
-			}
-			html += "</table>\n\t</div>\n\t<div id='bottom_band'>\n\t\t<div id='footer_center'>";
-			html += "<p><i>Index page generated by DICI " + VERSION() + "</i></br>Copyright © 2015 Digital Warrior Labs</p>";
-			html += "</div></body></html>";
-
-			if (!g_sProjectFolder.EndsWith("/"))
-			{
-				g_sProjectFolder += "/";
-			}
-
-			StreamWriter fileStream = new StreamWriter(g_sProjectFolder + "index.html", false);
-			fileStream.WriteLine(html);
-			fileStream.Close();
-
-			Console.WriteLine("Finished index page!");
-		}
-
 		//get the version information
 		public static string VERSION()
 		{
-			return VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_BUILD + "." + VERSION_REVISION;
+			return VERSION_MAJOR + "." + VERSION_MINOR + "." + VERSION_REVISION;
 		}
 	}
 }
