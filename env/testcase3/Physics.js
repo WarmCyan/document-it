@@ -15,6 +15,8 @@
 @d: Representation/collection of all physical properties that an object can have. NOTE: EVERY OBJECT THAT GETS EVALUATED BY THE PHYSICS ENGINE MUST CONTAIN AN INSTANCE OF THIS CLASS. Also note an important feature of this physics engine: It is entirely layer based, which means if you want an object to collide with something else, they both have to exist on a common layer. (See the layers property below for more information.)
 }*********************************/
 
+//{ @cnst: THING }
+
 /*********************************{
 @c: Physics
 }*********************************/

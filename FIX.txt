@@ -1,3 +1,8 @@
+3/22/2016
+--------------------
+FIXED	- BUG - Constants without descriptions aren't properly added
+	- IMPROVE - Add a -help command line argument to open up dici manual! (which should be added to package)
+
 2/27/2016
 --------------------
 	- BUG - Calling dici on project.apiproj should set directory of program to whatever folder .apiproj is in
@@ -5,7 +10,7 @@
 6/17/2015
 --------------------
 	- BUG - input parameters of a constructor not checking for @l tags
-	- IMPROVE - Make the stylesheet better, especially for multi-line stuff (check the style for squareshield documentation
+FIXED	- IMPROVE - Make the stylesheet better, especially for multi-line stuff (check the style for squareshield documentation
 
 
 5/21/2015

@@ -1,7 +1,7 @@
 ﻿//*************************************************************
 //  File: CodeParser.cs
 //  Date created: 1/16/2015
-//  Date edited: 2/28/2016
+//  Date edited: 3/22/2016
 //  Author: Nathan Martindale
 //  Copyright © 2016 Digital Warrior Labs
 //  Description: Takes a file, parses it into codeobjects and then returns a codedocument
@@ -807,6 +807,14 @@ namespace Engine
 				}
 				waitingVariable = null;
 				//EngineGovernor.log("DEBUG - : : Nullifying waitingVariable.", 1);
+			}
+			if (waitingConstant != null)
+			{
+				EngineGovernor.log("WARNING - Found constant with no description.", -1);
+				EngineGovernor.log("Warning text: Constant '" + waitingConstant.Name + "'", -1);
+				CodeObject finishedConstant = waitingConstant;
+				foundObjects.Add(finishedConstant);
+				waitingConstant = null;
 			}
 			if (waitingInput != null && waitingConstructor != null) //if we got to this point, it means that a constructor had an input
 			{
