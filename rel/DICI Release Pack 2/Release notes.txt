@@ -1,0 +1,12 @@
+----------------------------
+DICI 2.0.0 Release Notes
+Date: 6/2/2016
+----------------------------
+
+IMPORTANT NEW FEATURES:
+- Project-level sections! In the .apiproj file, you can specify sections, and files below delimiter all are associated under the same section
+- Project-level sidebar is now generated on all pages. It lists all sections, and for each section it will list classes and interfaces associated with it
+- A file can now contain multiple classes/interfaces and the engine will handle them appropriately
+
+KNOWN BUGS:
+- Files without classes or interfaces still crash the program. The base functionality for documenting raw files that just have functions exists, so this crash will be fixed in a later release.

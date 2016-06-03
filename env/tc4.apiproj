@@ -1,0 +1,16 @@
+:section Physics
+testcase4/Physics.js
+testcase4/PhysicsEngine.js
+testcase4/CollisionManifold.js
+
+:section Font
+testcase4/Symbol.js
+testcase4/Text.js
+testcase4/TextChar.js
+testcase4/Animation.js
+
+:section Extra
+testcase4/testfile2.java
+
+header=SquareShield 0.2.5 BETA
+destination=testcase4/docs
